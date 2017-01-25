@@ -42,14 +42,6 @@ if (__DEV__) {
         renderError(error)
       }
     }
-
-    // Setup hot module replacement
-    module.hot.accept('./routes/index', () =>
-      setImmediate(() => {
-        ReactDOM.unmountComponentAtNode(MOUNT_NODE)
-        render()
-      })
-    )
   }
 }
 
