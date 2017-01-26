@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react'
 class CodingContainer extends Component {
     render () {
         return (
-            <div style={{width : '50%', height: '100%', backgroundColor : 'green' ,display : 'inline-block'}}>
+            <div style={{width : '100%', height: '40%', backgroundColor : 'green' ,display : 'inline-block'}}>
             this is the coding area
             </div>
         )
