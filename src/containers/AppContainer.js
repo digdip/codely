@@ -17,7 +17,7 @@ class AppContainer extends Component {
 
     return (
       <Provider store={store}>
-        <div style={{ height: '100%', width : '100%', position : 'fixed' }}>
+        <div style={{ height: '100%', width : '100%', position : 'fixed' }} class='mainContainer'>
           <VisualizingContainer/>
           <CodingContainer/>
         </div>
