@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { Provider } from 'react-redux'
-import VisualizingContainer from '../visualizing/containers/VisualizingContainer'
-import CodingContainer from '../coding/containers/CodingContainer'
+import VisualizingContainer from '../editors/containers/VisualizingContainer'
+import CodingContainer from '../editors/containers/CodingContainer'
 
 class AppContainer extends Component {
   static propTypes = {
