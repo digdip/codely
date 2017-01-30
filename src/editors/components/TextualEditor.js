@@ -47,7 +47,7 @@ const TextualEditor = React.createClass({
             height = undefined
         }
         return (
-            <div>
+            <div className='codeTextEditorContainer'>
                 <AceEditor
                     ref="editor"
                     theme="textmate"

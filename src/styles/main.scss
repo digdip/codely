@@ -1,6 +1,35 @@
 .mainContainer {
   height: 100%;
-  width : 100%;
-  position : fixed;
-  border: solid 1px black;
+  width: 100%;
+  position: fixed;
 }
+
+.visualContainer {
+  width : 100%;
+  height: 60%;
+  borderBottom: 1px solid black;
+  display : inline-block;
+}
+
+.codeContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 40%;
+  background-color: #d36242;
+  border-top: solid 1px black;
+  padding: 10px;
+}
+
+.codeDefinitionContainer {
+  background-color: #1bd35b;
+  width: 30%;
+  margin-right: 10px;
+  border-right: solid 1px black;
+}
+
+.codeTextEditorContainer {
+  background-color: lightgrey;
+  width: 70%;
+}
+
