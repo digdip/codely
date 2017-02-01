@@ -1,10 +1,10 @@
 import * as types from '../../const/actionTypes'
 import * as entityTypes from '../../const/entityTypes'
 
-export function addNewEntity() {
+export function addNewEntity(entityType) {
     return {
         type: types.ADD_NEW_ENTITY,
-        entityType: entityTypes.SQUARE
+        entityType
     }
 }
 

@@ -4,8 +4,13 @@ class VisualizingEntity extends Component {
 
     render () {
         return (
-            <svg width="50" height="50" style={{position: "absolute", top: '200px', left : '150px'}}>
-                <rect width="50" height="50" style={{ fill: "rgb(0,0,255)", strokeWidth: "2", stroke: "rgb(0,0,0)"}} />
+            <svg width={this.props.data.width}
+                 height={this.props.data.height}
+                 style={{position: "absolute", top: this.props.data.upDown + 'px', left : this.props.data.leftRight + 'px'}}>
+
+                    <rect width={this.props.data.width}
+                          height={this.props.data.height}
+                          style={{ fill: this.props.data.color, strokeWidth: "2", stroke: "rgb(0,0,0)"}} />
             </svg>
         )
     }

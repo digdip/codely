@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import editorsReducer from '../editors/reducers/editorsReducers'
+import editorsReducer from '../editors/reducers/editorsReducer'
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({

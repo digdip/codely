@@ -1,4 +1,5 @@
 import * as types from '../../const/actionTypes'
+import * as entityTypes from  '../../const/entityTypes'
 
 const DEFAULT_X_POSITION = 100
 const DEFAULT_Y_POSITION = 100
@@ -18,7 +19,7 @@ export default function editorsReducer(state = initialState, action = undefined)
 
     switch (action.type) {
     case types.ADD_NEW_ENTITY:
-        newState.entities.push(createEntity(action.entityType))
+        newState.entities = [createEntity(action.entityType),...newState.entities]
         return newState
     case types.SAVE_ENTITY:
         return newState
@@ -28,13 +29,21 @@ export default function editorsReducer(state = initialState, action = undefined)
 
 }
 
-
 function createEntity(entityType) {
+    switch (entityType) {
+    case entityTypes.SQUARE:
+        return createSquare()
+    default:
+        return {}
+    }
+}
+
+function createSquare() {
     return {
         id: counter++,
-        entityType,
-        x: DEFAULT_X_POSITION,
-        y: DEFAULT_Y_POSITION,
+        entityType: entityTypes.SQUARE,
+        leftRight: DEFAULT_X_POSITION + counter * DEFAULT_WIDTH * 2,
+        upDown: DEFAULT_Y_POSITION,
         width: DEFAULT_WIDTH,
         height: DEFAULT_HEIGHT,
         color: DEFAULT_COLOR
