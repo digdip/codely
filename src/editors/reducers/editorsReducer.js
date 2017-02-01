@@ -10,7 +10,8 @@ const DEFAULT_COLOR = 'red'
 let counter = 0
 
 const initialState = {
-    entities: []
+    entities: {},
+    selectedEntityId: null
 }
 
 export default function editorsReducer(state = initialState, action = undefined) {
@@ -19,7 +20,11 @@ export default function editorsReducer(state = initialState, action = undefined)
 
     switch (action.type) {
     case types.ADD_NEW_ENTITY:
-        newState.entities = [createEntity(action.entityType),...newState.entities]
+        let newEntity = createEntity(action.entityType)
+        newState.entities[newEntity.id] = newEntity
+        //todo: fix
+        newState.entities = Object.assign({}, newState.entities)
+        newState.selectedEntityId = newEntity.id
         return newState
     case types.SAVE_ENTITY:
         return newState
@@ -40,13 +45,18 @@ function createEntity(entityType) {
 
 function createSquare() {
     return {
-        id: counter++,
+        id: counter,
+        key: counter++,
         entityType: entityTypes.SQUARE,
-        leftRight: DEFAULT_X_POSITION + counter * DEFAULT_WIDTH * 2,
-        upDown: DEFAULT_Y_POSITION,
-        width: DEFAULT_WIDTH,
-        height: DEFAULT_HEIGHT,
-        color: DEFAULT_COLOR
+        properties: {
+            leftRight: DEFAULT_X_POSITION + counter * DEFAULT_WIDTH * 2,
+            upDown   : DEFAULT_Y_POSITION,
+            width    : DEFAULT_WIDTH,
+            height   : DEFAULT_HEIGHT,
+            color    : DEFAULT_COLOR
+        },
+        methods: {}
+
     }
 }
 

@@ -13,8 +13,8 @@ class VisualizingContainer extends Component {
     render () {
         return (
             <div className='visualContainer'>
-                {this.props.entities.map((entity) =>
-                    <VisualEntity data={entity}/>
+                {Object.values(this.props.entities).map((entity) =>
+                    <VisualEntity data={entity.properties}/>
                 )}
             </div>
         )
