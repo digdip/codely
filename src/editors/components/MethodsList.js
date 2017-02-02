@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import {DataTable, TableHeader} from 'react-mdl'
+import {DataTable, TableHeader, Button, Icon} from 'react-mdl'
 
 class MethodsList extends Component {
 
@@ -15,6 +15,11 @@ class MethodsList extends Component {
 
             return (
                 <div className='codeDefinitionContainer'>
+                    <div className='toolbar'>
+                        <Button style={{minWidth: '0', width: '30px', height: '30px', padding: '0', lineHeight: '0'}}>
+                            <Icon name="add" style={{fontSize: '18'}}/>
+                        </Button>
+                    </div>
                     <DataTable
                         shadow={0}
                         rows={tableModel}>
