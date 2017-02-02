@@ -5,12 +5,14 @@ import * as editorsActions from '../actions/editorsActions'
 
 import TextualEditor from '../components/TextualEditor'
 import CodeDefinition from '../components/CodeDefinition'
+import MethodsList from '../components/MethodsList'
 
 class CodingContainer extends Component {
     render () {
         return (
             <div className='codeContainer'>
                 <CodeDefinition selectedEntity={this.props.entities[this.props.selectedEntityId]}/>
+                <MethodsList selectedEntity={this.props.entities[this.props.selectedEntityId]}/>
                 <TextualEditor
                     value='hhhh'
                     />

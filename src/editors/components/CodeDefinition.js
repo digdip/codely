@@ -18,9 +18,8 @@ class CodeDefinition extends Component {
                 <div className='codeDefinitionContainer'>
                     <DataTable
                         shadow={0}
-                        rows={tableModel}
-                    >
-                        <TableHeader name="propertyName" tooltip="The amazing material name">Name</TableHeader>
+                        rows={tableModel}>
+                        <TableHeader name="propertyName" tooltip="The amazing material name">Property Name</TableHeader>
                         <TableHeader name="propertyValue" tooltip="The amazing material name">Value</TableHeader>
                     </DataTable>
                 </div>
