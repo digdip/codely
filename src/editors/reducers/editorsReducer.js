@@ -27,7 +27,7 @@ export default function editorsReducer(state = initialState, action = undefined)
     case types.ADD_NEW_METHOD:
         return state.setIn(['entities', action.entityId, 'methods', action.methodName], 'put code here!')
     case types.SELECT_METHOD:
-        let entity = state.entities[action.entityId]
+        return state.setIn(['entities', action.entityId, 'selectedMethod'], action.methodName)
         return state
     default:
         return state
@@ -56,7 +56,8 @@ function createSquare() {
             height   : DEFAULT_HEIGHT,
             color    : DEFAULT_COLOR
         },
-        methods: {}
+        methods: {},
+        selectedMethod: ''
 
     })
 }

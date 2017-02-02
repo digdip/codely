@@ -44,4 +44,16 @@
   padding-top: 5px;
 }
 
+.listItem {
+  border-bottom: 1px solid #919191;
+  background-color: #e7e7e7;
+  height: 40px;
+  width: 100%;
+  padding: 10px;
+}
+
+.listItem-selected {
+  @extend .listItem;
+  background-color: #00bcd4;
+}
 

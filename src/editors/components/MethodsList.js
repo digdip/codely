@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
-import {DataTable, TableHeader, Button, Icon, Dialog, DialogTitle, DialogContent, DialogActions, Textfield} from 'react-mdl'
+import {Button, Icon, Dialog, DialogTitle, DialogContent, DialogActions, Textfield} from 'react-mdl'
+import List from '../../infra-components/List'
 
 class MethodsList extends Component {
 
@@ -27,8 +28,8 @@ class MethodsList extends Component {
         this.props.addNewMethod(this.props.data.get('id'), this.refs.methodNameField.inputRef.value)
     }
 
-    selectMethod(event) {
-        this.props.selectMethod(this.props.data.get('id'))
+    selectMethod(methodName) {
+        this.props.selectMethod(this.props.data.get('id'), methodName)
     }
 
     render () {
@@ -37,7 +38,9 @@ class MethodsList extends Component {
             let tableModel = []
             methods.map ((methodCode, methodName) =>
                 tableModel.push({
-                    methodName : methodName
+                    id: methodName,
+                    text : methodName,
+                    isSelected : this.props.data.get('selectedMethod') === methodName
                 })
             )
 
@@ -49,12 +52,8 @@ class MethodsList extends Component {
                             <Icon name="add" style={{fontSize: '18'}}/>
                         </Button>
                     </div>
-                    <DataTable
-                        shadow={0}
-                        rows={tableModel}
-                        onSelectionChanged={this.selectMethod}>
-                        <TableHeader name="methodName">Method Name</TableHeader>
-                    </DataTable>
+                    <List listItems={tableModel}
+                          onItemClicked={this.selectMethod}/>
                     <Dialog open={this.state.isAddMethodDialogOpen}>
                         <DialogContent>
                             <Textfield
