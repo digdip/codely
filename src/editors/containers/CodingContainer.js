@@ -4,16 +4,17 @@ import { bindActionCreators } from 'redux'
 import * as editorsActions from '../actions/editorsActions'
 
 import TextualEditor from '../components/TextualEditor'
-import CodeDefinition from '../components/CodeDefinition'
+import PropertiesList from '../components/PropertiesList'
 import MethodsList from '../components/MethodsList'
 
 class CodingContainer extends Component {
     render () {
         return (
             <div className='codeContainer'>
-                <CodeDefinition selectedEntity={this.props.entities[this.props.selectedEntityId]}/>
-                <MethodsList selectedEntity={this.props.entities[this.props.selectedEntityId]}
-                             addNewMethod={this.props.actions.addNewMethod}/>
+                <PropertiesList data={this.props.entities.get(this.props.selectedEntityId)}/>
+                <MethodsList data={this.props.entities.get(this.props.selectedEntityId)}
+                             addNewMethod={this.props.actions.addNewMethod}
+                             selectMethod={this.props.actions.selectMethod}/>
                 <TextualEditor
                     value='hhhh'
                     />
@@ -24,8 +25,8 @@ class CodingContainer extends Component {
 
 function select(state) {
     return {
-        entities: state.editorsReducer.entities,
-        selectedEntityId: state.editorsReducer.selectedEntityId
+        entities: state.editorsReducer.get('entities'),
+        selectedEntityId: state.editorsReducer.get('selectedEntityId')
     }
 }
 

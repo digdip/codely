@@ -23,3 +23,11 @@ export function addNewMethod(entityId, methodName) {
         methodName
     }
 }
+
+export function selectMethod(entityId, methodName) {
+    return {
+        type: types.SELECT_METHOD,
+        entityId,
+        methodName
+    }
+}

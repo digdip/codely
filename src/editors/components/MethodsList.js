@@ -8,6 +8,7 @@ class MethodsList extends Component {
         this.closeDialog = this.closeDialog.bind(this)
         this.openDialog = this.openDialog.bind(this)
         this.addNewMethod = this.addNewMethod.bind(this)
+        this.selectMethod = this.selectMethod.bind(this)
         this.state = {
             isAddMethodDialogOpen: false
         }
@@ -23,14 +24,18 @@ class MethodsList extends Component {
 
     addNewMethod() {
         this.closeDialog()
-        this.props.addNewMethod(this.props.selectedEntity.id, this.refs.methodNameField.inputRef.value)
+        this.props.addNewMethod(this.props.data.get('id'), this.refs.methodNameField.inputRef.value)
+    }
+
+    selectMethod(event) {
+        this.props.selectMethod(this.props.data.get('id'))
     }
 
     render () {
-        if (this.props.selectedEntity) {
-            let properties = this.props.selectedEntity.methods
+        if (this.props.data) {
+            let methods = this.props.data.get('methods')
             let tableModel = []
-            Object.keys(properties).map ((methodName) =>
+            methods.map ((methodCode, methodName) =>
                 tableModel.push({
                     methodName : methodName
                 })
@@ -46,7 +51,8 @@ class MethodsList extends Component {
                     </div>
                     <DataTable
                         shadow={0}
-                        rows={tableModel}>
+                        rows={tableModel}
+                        onSelectionChanged={this.selectMethod}>
                         <TableHeader name="methodName">Method Name</TableHeader>
                     </DataTable>
                     <Dialog open={this.state.isAddMethodDialogOpen}>

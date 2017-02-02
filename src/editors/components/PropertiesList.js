@@ -1,16 +1,16 @@
 import React, { Component, PropTypes } from 'react'
 import {DataTable, TableHeader} from 'react-mdl'
 
-class CodeDefinition extends Component {
+class PropertiesList extends Component {
 
     render () {
-        if (this.props.selectedEntity) {
-            let properties = this.props.selectedEntity.properties
+        if (this.props.data) {
+            let properties = this.props.data.get('properties')
             let tableModel = []
-            Object.keys(properties).map ((propertyName) =>
+            properties.map ((value, key) =>
                 tableModel.push({
-                    propertyName : propertyName,
-                    propertyValue : properties[propertyName]
+                    propertyName : key,
+                    propertyValue : value
                 })
             )
 
@@ -30,4 +30,4 @@ class CodeDefinition extends Component {
     }
 }
 
-export default CodeDefinition
+export default PropertiesList

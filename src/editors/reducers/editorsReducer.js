@@ -1,5 +1,6 @@
 import * as types from '../../const/actionTypes'
 import * as entityTypes from  '../../const/entityTypes'
+import Immutable from 'immutable'
 
 const DEFAULT_X_POSITION = 100
 const DEFAULT_Y_POSITION = 100
@@ -9,30 +10,25 @@ const DEFAULT_COLOR = 'red'
 
 let counter = 0
 
-const initialState = {
+const initialState = Immutable.fromJS({
     entities: {},
     selectedEntityId: null
-}
+})
 
 export default function editorsReducer(state = initialState, action = undefined) {
-
-    var newState = Object.assign({}, state)
 
     switch (action.type) {
     case types.ADD_NEW_ENTITY:
         let newEntity = createEntity(action.entityType)
-        newState.entities[newEntity.id] = newEntity
-        //todo: fix
-        newState.entities = Object.assign({}, newState.entities)
-        newState.selectedEntityId = newEntity.id
-        return newState
+        state = state.setIn(['entities', newEntity.get('id')], newEntity)
+        return state.set('selectedEntityId', newEntity.get('id'))
     case types.SAVE_ENTITY:
-        return newState
+        return state
     case types.ADD_NEW_METHOD:
-        let entity = newState.entities[action.entityId]
-        entity.methods[action.methodName] = 'put code here!'
-        newState.entities = Object.assign({}, newState.entities)
-        return newState
+        return state.setIn(['entities', action.entityId, 'methods', action.methodName], 'put code here!')
+    case types.SELECT_METHOD:
+        let entity = state.entities[action.entityId]
+        return state
     default:
         return state
     }
@@ -49,7 +45,7 @@ function createEntity(entityType) {
 }
 
 function createSquare() {
-    return {
+    return Immutable.fromJS({
         id: counter,
         key: counter++,
         entityType: entityTypes.SQUARE,
@@ -62,7 +58,7 @@ function createSquare() {
         },
         methods: {}
 
-    }
+    })
 }
 
 

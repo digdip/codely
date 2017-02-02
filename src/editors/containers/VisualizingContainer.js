@@ -13,8 +13,8 @@ class VisualizingContainer extends Component {
     render () {
         return (
             <div className='visualContainer'>
-                {Object.values(this.props.entities).map((entity) =>
-                    <VisualEntity data={entity.properties}/>
+                {this.props.entities.map((entity) =>
+                    <VisualEntity data={entity.get('properties')}/>
                 )}
             </div>
         )
@@ -24,7 +24,7 @@ class VisualizingContainer extends Component {
 
 function select(state) {
     return {
-        entities: state.editorsReducer.entities
+        entities: state.editorsReducer.get('entities')
     }
 }
 

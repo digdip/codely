@@ -2,3 +2,4 @@
 export const ADD_NEW_ENTITY = 'ADD_NEW_ENTITY'
 export const SAVE_ENTITY = 'SAVE_ENTITY'
 export const ADD_NEW_METHOD = 'ADD_NEW_METHOD'
+export const SELECT_METHOD = 'SELECT_METHOD'
