@@ -12,7 +12,8 @@ class CodingContainer extends Component {
         return (
             <div className='codeContainer'>
                 <CodeDefinition selectedEntity={this.props.entities[this.props.selectedEntityId]}/>
-                <MethodsList selectedEntity={this.props.entities[this.props.selectedEntityId]}/>
+                <MethodsList selectedEntity={this.props.entities[this.props.selectedEntityId]}
+                             addNewMethod={this.props.actions.addNewMethod}/>
                 <TextualEditor
                     value='hhhh'
                     />

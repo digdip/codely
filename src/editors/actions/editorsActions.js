@@ -15,3 +15,11 @@ export function saveEntity(entityId, entityCode) {
         entityCode
     }
 }
+
+export function addNewMethod(entityId, methodName) {
+    return {
+        type: types.ADD_NEW_METHOD,
+        entityId,
+        methodName
+    }
+}

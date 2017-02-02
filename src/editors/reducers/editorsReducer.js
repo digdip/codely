@@ -28,6 +28,11 @@ export default function editorsReducer(state = initialState, action = undefined)
         return newState
     case types.SAVE_ENTITY:
         return newState
+    case types.ADD_NEW_METHOD:
+        let entity = newState.entities[action.entityId]
+        entity.methods[action.methodName] = 'put code here!'
+        newState.entities = Object.assign({}, newState.entities)
+        return newState
     default:
         return state
     }
