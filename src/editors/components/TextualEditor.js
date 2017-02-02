@@ -46,14 +46,17 @@ const TextualEditor = React.createClass({
         if (height !== undefined && parseInt(height, 10) < 0) {
             height = undefined
         }
+
+        let selectedMethodBody = this.props.data ? this.props.data.getIn(['methods', this.props.data.get('selectedMethod')]) : ''
+
         return (
             <div className='codeTextEditorContainer'>
                 <AceEditor
                     ref="editor"
                     theme="textmate"
                     name={this.props.seleniumId + '_textualEditor_' + timeStep}
-                    value={this.props.value}
-                    readOnly = {this.props.disabled}
+                    value={selectedMethodBody}
+                    readOnly = {!this.props.data || !this.props.data.get('selectedMethod')}
                     highlightActiveLine = {!this.props.disabled}
                     editorProps={{$blockScrolling: true}}
                     setOptions={{highlightGutterLine: !this.props.disabled}}

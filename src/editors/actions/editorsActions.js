@@ -31,3 +31,12 @@ export function selectMethod(entityId, methodName) {
         methodName
     }
 }
+
+export function updateMethodBody(entityId, methodName, methodBody) {
+    return {
+        type: types.UPDATE_METHOD_BODY,
+        entityId,
+        methodName,
+        methodBody
+    }
+}

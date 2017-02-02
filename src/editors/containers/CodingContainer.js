@@ -8,15 +8,30 @@ import PropertiesList from '../components/PropertiesList'
 import MethodsList from '../components/MethodsList'
 
 class CodingContainer extends Component {
+
+
+
+    constructor(props) {
+        super(props)
+        this.onMethodBodyChange = this.onMethodBodyChange.bind(this)
+    }
+
+    onMethodBodyChange(value) {
+        let entity = this.props.entities.get(this.props.selectedEntityId)
+        this.props.actions.updateMethodBody(entity.get('id'), entity.get('selectedMethod'), value)
+    }
+
     render () {
+        let entity = this.props.entities.get(this.props.selectedEntityId)
         return (
             <div className='codeContainer'>
-                <PropertiesList data={this.props.entities.get(this.props.selectedEntityId)}/>
-                <MethodsList data={this.props.entities.get(this.props.selectedEntityId)}
+                <PropertiesList data={entity}/>
+                <MethodsList data={entity}
                              addNewMethod={this.props.actions.addNewMethod}
                              selectMethod={this.props.actions.selectMethod}/>
                 <TextualEditor
-                    value='hhhh'
+                    data={entity}
+                    onChange={this.onMethodBodyChange}
                     />
             </div>
         )
