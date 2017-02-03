@@ -4,8 +4,8 @@ import Immutable from 'immutable'
 
 const DEFAULT_X_POSITION = 100
 const DEFAULT_Y_POSITION = 100
-const DEFAULT_WIDTH = 50
-const DEFAULT_HEIGHT = 50
+const DEFAULT_WIDTH = 40
+const DEFAULT_HEIGHT = 40
 const DEFAULT_COLOR = 'red'
 
 let counter = 0
