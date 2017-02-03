@@ -47,6 +47,7 @@ class MethodsList extends Component {
 
             return (
                 <div className='codeDefinitionContainer'>
+                    <div className='header'>Methods</div>
                     <div className='toolbar'>
                         <Button style={{minWidth: '0', width: '30px', height: '30px', padding: '0', lineHeight: '0'}}
                                 onClick={this.openDialog}>

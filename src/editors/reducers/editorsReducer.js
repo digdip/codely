@@ -25,7 +25,7 @@ export default function editorsReducer(state = initialState, action = undefined)
     case types.SAVE_ENTITY:
         return state
     case types.ADD_NEW_METHOD:
-        return state.setIn(['entities', action.entityId, 'methods', action.methodName], 'put code here!')
+        return state.setIn(['entities', action.entityId, 'methods', action.methodName], '')
     case types.SELECT_METHOD:
             return state.setIn(['entities', action.entityId, 'selectedMethod'], action.methodName)
     case types.UPDATE_METHOD_BODY:
