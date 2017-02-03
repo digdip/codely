@@ -16,7 +16,7 @@ class PropertiesList extends Component {
 
             return (
                 <div className='codeDefinitionContainer'>
-                    <DataTable
+                    <DataTable className='propertiesList'
                         shadow={0}
                         rows={tableModel}>
                         <TableHeader name="propertyName" tooltip="The amazing material name">Property Name</TableHeader>
