@@ -10,6 +10,7 @@ class MethodsList extends Component {
         this.openDialog = this.openDialog.bind(this)
         this.addNewMethod = this.addNewMethod.bind(this)
         this.selectMethod = this.selectMethod.bind(this)
+        this.onKeyDown = this.onKeyDown.bind(this)
         this.state = {
             isAddMethodDialogOpen: false
         }
@@ -18,10 +19,12 @@ class MethodsList extends Component {
     openDialog() {
         this.refs.methodNameField.inputRef.value = ''
         this.setState({isAddMethodDialogOpen: true})
+        window.addEventListener('keydown', this.onKeyDown)
     }
 
     closeDialog() {
         this.setState({isAddMethodDialogOpen: false})
+        window.removeEventListener('keydown', this.onKeyDown)
     }
 
     addNewMethod() {
@@ -31,6 +34,17 @@ class MethodsList extends Component {
 
     selectMethod(methodName) {
         this.props.selectMethod(this.props.data.get('id'), methodName)
+    }
+
+    onKeyDown (e) {
+        // Escape was typed
+        if (e.keyCode === 27) {
+            e.preventDefault()
+            this.closeDialog()
+        } else if (e.keyCode === 13) {
+            e.preventDefault() // prevent browser from sending the enter key to dialogs (like TextualEditor)
+            this.addNewMethod()
+        }
     }
 
     render () {
