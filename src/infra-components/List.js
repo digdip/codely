@@ -13,7 +13,7 @@ export default class List extends Component {
 
     render() {
         return (
-            <ul>
+            <ul className='list'>
                 {this.props.listItems.map((listItem) =>
                     <ListItem {...listItem}
                         id={listItem.id}
