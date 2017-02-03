@@ -4,8 +4,8 @@ import Immutable from 'immutable'
 
 const DEFAULT_X_POSITION = 100
 const DEFAULT_Y_POSITION = 100
-const DEFAULT_WIDTH = 50
-const DEFAULT_HEIGHT = 50
+const DEFAULT_WIDTH = 40
+const DEFAULT_HEIGHT = 40
 const DEFAULT_COLOR = 'red'
 
 let counter = 0
@@ -25,7 +25,8 @@ export default function editorsReducer(state = initialState, action = undefined)
     case types.SAVE_ENTITY:
         return state
     case types.ADD_NEW_METHOD:
-        return state.setIn(['entities', action.entityId, 'methods', action.methodName], '')
+        state = state.setIn(['entities', action.entityId, 'methods', action.methodName], '')
+        return state.setIn(['entities', action.entityId, 'selectedMethod'], action.methodName)
     case types.SELECT_METHOD:
             return state.setIn(['entities', action.entityId, 'selectedMethod'], action.methodName)
     case types.UPDATE_METHOD_BODY:

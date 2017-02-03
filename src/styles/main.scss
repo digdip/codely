@@ -6,42 +6,31 @@
 
 .visualContainer {
   width : 100%;
-  height: 60%;
-  borderBottom: 1px solid black;
+  height: 50%;
+  border-bottom: 3px solid #bbbbbb;
   display : inline-block;
+  background-size: 20px 20px;
+  background-image: linear-gradient(to right, #eeeeee 1px, transparent 1px), linear-gradient(to bottom, #eeeeee 1px, transparent 1px);
 }
 
 .codeContainer {
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 40%;
-  background-color: #95aebf;
-  border-top: solid 1px black;
+  height: 50%;
   padding: 10px;
 }
 
 .codeDefinitionContainer {
-  background-color: #f2f2f2;
   width: 30%;
   margin-right: 10px;
-  border-right: solid 1px black;
+  border: solid 1px #eeeeee;
+  overflow: auto;
 }
 
 .codeTextEditorContainer {
   background-color: lightgrey;
   width: 70%;
-}
-
-.propertiesTable {
-  width: 100%;
-}
-
-.header {
-  width: 100%;
-  height: 40px;
-  border-bottom: solid 1px #919191;
-  padding: 10px;
 }
 
 .toolbar {
@@ -50,17 +39,19 @@
   width: 100%;
   height: 40px;
   background-color: #e7e7e7;
-  border-bottom: solid 1px #919191;
+  border-bottom: solid 1px #eeeeee;
   padding: 1px;
   padding-top: 5px;
 }
 
-.simpleList {
-  padding-left: 0;
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .listItem {
-  border-bottom: 1px solid #919191;
+  border-bottom: 1px solid rgba(0,0,0,.12);
   background-color: #ffffff;
   height: 40px;
   width: 100%;
@@ -69,6 +60,10 @@
 
 .listItem-selected {
   @extend .listItem;
-  background-color: #a5cfe4;
+  background-color: #e0e0e0;
 }
 
+.propertiesList{
+    width: 100%;
+    height: 100%;
+}
