@@ -16,6 +16,7 @@ class MethodsList extends Component {
     }
 
     openDialog() {
+        this.refs.methodNameField.inputRef.value = ''
         this.setState({isAddMethodDialogOpen: true})
     }
 
