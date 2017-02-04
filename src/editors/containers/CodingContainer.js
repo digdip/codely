@@ -25,7 +25,7 @@ class CodingContainer extends Component {
         let entity = this.props.entities.get(this.props.selectedEntityId)
         return (
             <div className='codeContainer'>
-                <PropertiesList data={entity}/>
+                <PropertiesList data={entity} insertTextToMethod={this.props.actions.insertTextToMethod}/>
                 <MethodsList data={entity}
                              addNewMethod={this.props.actions.addNewMethod}
                              selectMethod={this.props.actions.selectMethod}/>

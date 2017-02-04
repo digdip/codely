@@ -28,9 +28,16 @@ export default function editorsReducer(state = initialState, action = undefined)
         state = state.setIn(['entities', action.entityId, 'methods', action.methodName], '')
         return state.setIn(['entities', action.entityId, 'selectedMethod'], action.methodName)
     case types.SELECT_METHOD:
-            return state.setIn(['entities', action.entityId, 'selectedMethod'], action.methodName)
+        return state.setIn(['entities', action.entityId, 'selectedMethod'], action.methodName)
     case types.UPDATE_METHOD_BODY:
-            return state.setIn(['entities', action.entityId, 'methods', action.methodName], action.methodBody)
+        return state.setIn(['entities', action.entityId, 'methods', action.methodName], action.methodBody)
+    case types.INSERT_TEXT_TO_METHOD:
+        let currentBody = state.getIn(['entities', action.entityId, 'methods', action.methodName])
+        if (currentBody && !currentBody.endsWith(' ')) {
+            currentBody += ' '
+        }
+        currentBody += action.text + ' '
+        return state.setIn(['entities', action.entityId, 'methods', action.methodName], currentBody)
     default:
         return state
     }

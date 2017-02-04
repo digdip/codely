@@ -1,7 +1,15 @@
 import React, { Component, PropTypes } from 'react'
-import {DataTable, TableHeader} from 'react-mdl'
+import KeyValueList from '../../infra-components/KeyValueList'
 
 class PropertiesList extends Component {
+    constructor(props) {
+        super(props)
+        this.onItemClicked = this.onItemClicked.bind(this)
+    }
+
+    onItemClicked(item) {
+        this.props.insertTextToMethod(this.props.data.get('id'), this.props.data.get('selectedMethod'), item.key)
+    }
 
     render () {
         if (this.props.data) {
@@ -9,19 +17,18 @@ class PropertiesList extends Component {
             let tableModel = []
             properties.map ((value, key) =>
                 tableModel.push({
-                    propertyName : key,
-                    propertyValue : value
+                    id : key,
+                    text : key,
+                    inputValue : value
                 })
             )
 
             return (
                 <div className='codeDefinitionContainer'>
-                    <DataTable className='propertiesList'
-                        shadow={0}
-                        rows={tableModel}>
-                        <TableHeader name="propertyName" tooltip="The amazing material name">Property Name</TableHeader>
-                        <TableHeader name="propertyValue" tooltip="The amazing material name">Value</TableHeader>
-                    </DataTable>
+                    <KeyValueList className='keyValueList'
+                        listItems={tableModel}
+                        onItemClicked={this.onItemClicked}>
+                    </KeyValueList>
                 </div>
             )
         } else {

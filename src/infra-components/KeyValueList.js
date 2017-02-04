@@ -1,28 +1,29 @@
 import React, { Component } from 'react'
-import ListItem from './ListItem'
+import KeyValueListItem from './KeyValueListItem'
 
-export default class List extends Component {
+export default class KeyValueList extends Component {
     constructor(props){
         super(props)
         this.onItemClicked = this.onItemClicked.bind(this)
     }
 
-    onItemClicked(id) {
-        this.props.onItemClicked(id)
+    onItemClicked(item) {
+        this.props.onItemClicked(item)
     }
 
     render() {
         return (
-            <ul className='list'>
+            <div className='list'>
                 {this.props.listItems.map((listItem) =>
-                    <ListItem
+                    <KeyValueListItem
                         id={listItem.id}
                         text={listItem.text}
+                        inputValue={listItem.inputValue}
                         isSelected={listItem.isSelected}
                         onClick={this.onItemClicked}
                     />
                 )}
-            </ul>
+            </div>
         )
     }
 }

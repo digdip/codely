@@ -40,9 +40,10 @@ const TextualEditor = React.createClass({
         }
     },
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         let selectedMethodBody = this.props.data ? this.props.data.getIn(['methods', this.props.data.get('selectedMethod')]) : ''
-        if (selectedMethodBody === '') {
+        let prevSelectedMethodBody = prevProps.data ? prevProps.data.getIn(['methods', prevProps.data.get('selectedMethod')]) : ''
+        if (selectedMethodBody !== prevSelectedMethodBody) {
             this.refs.editor.editor.focus()
         }
     },

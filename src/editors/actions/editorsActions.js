@@ -40,3 +40,12 @@ export function updateMethodBody(entityId, methodName, methodBody) {
         methodBody
     }
 }
+
+export function insertTextToMethod(entityId, methodName, text) {
+    return {
+        type: types.INSERT_TEXT_TO_METHOD,
+        entityId,
+        methodName,
+        text
+    }
+}
