@@ -25,6 +25,8 @@ class PropertiesList extends Component {
 
             return (
                 <div className='codeDefinitionContainer'>
+                    <div className='header'>Methods</div>
+                    <div className='toolbar'/>
                     <KeyValueList className='keyValueList'
                         listItems={tableModel}
                         onItemClicked={this.onItemClicked}>
