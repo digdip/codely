@@ -2,10 +2,10 @@ import * as types from '../../const/actionTypes'
 import * as entityTypes from  '../../const/entityTypes'
 import Immutable from 'immutable'
 
-const DEFAULT_X_POSITION = 100
-const DEFAULT_Y_POSITION = 100
-const DEFAULT_WIDTH = 40
-const DEFAULT_HEIGHT = 40
+const DEFAULT_X_POSITION = 4
+const DEFAULT_Y_POSITION = 5
+const DEFAULT_WIDTH = 2
+const DEFAULT_HEIGHT = 2
 const DEFAULT_COLOR = 'red'
 
 let counter = 0

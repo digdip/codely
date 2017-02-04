@@ -1,0 +1,1 @@
+export const GRID_SIZE_PIXELS = 20
