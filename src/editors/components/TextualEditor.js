@@ -1,9 +1,9 @@
 import React from 'react'
 import AceEditor from 'react-ace'
-import 'brace/mode/yaml'
-import 'brace/mode/python'
+import 'brace/mode/coffee'
 import 'brace/theme/textmate'
 import 'brace/ext/language_tools'
+import {Button, Icon} from 'react-mdl'
 
 /*
  Wrapper for ReactAce
@@ -25,7 +25,7 @@ const TextualEditor = React.createClass({
         fontSize: React.PropTypes.number
     },
 
-    getDefaultProps:function() {
+    getDefaultProps() {
         return {
             disabled: false,
             value: '',
@@ -38,6 +38,10 @@ const TextualEditor = React.createClass({
         if (!this.props.disabled) {
             editor.focus()
         }
+    },
+
+    runCode() {
+        this.props.runCode(this.props.data.get('id'), this.props.data.get('selectedMethod'))
     },
 
     componentDidUpdate(prevProps) {
@@ -59,6 +63,12 @@ const TextualEditor = React.createClass({
 
         return (
             <div className='codeTextEditorContainer'>
+                <div className='toolbar'>
+                    <Button style={{minWidth: '0', width: '30px', height: '30px', padding: '0', lineHeight: '0'}}
+                            onClick={this.runCode}>
+                        <Icon name="add" style={{fontSize: '18'}}/>
+                    </Button>
+                </div>
                 <AceEditor
                     ref="editor"
                     theme="textmate"

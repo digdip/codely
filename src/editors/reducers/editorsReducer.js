@@ -1,6 +1,7 @@
 import * as types from '../../const/actionTypes'
 import * as entityTypes from  '../../const/entityTypes'
 import Immutable from 'immutable'
+import CoffeeScript from 'coffee-script'
 
 const DEFAULT_X_POSITION = 4
 const DEFAULT_Y_POSITION = 5
@@ -14,6 +15,51 @@ const initialState = Immutable.fromJS({
     entities: {},
     selectedEntityId: null
 })
+
+function runMethod(entity, method, methodName) {
+    //store current properties so we can revert to it after run
+
+    let code = {
+        text : '',
+        insertNewLine: function(line) {
+            this.text += line + '\n'
+        }
+    }
+    code.insertNewLine('use strict')
+
+    //prepare context
+
+    //////add properties of the entity to code
+    entity.get('properties').forEach(function(value, key) {
+        code.insertNewLine(key + ' = ' + value)
+    })
+
+    //////add all methods to code
+    entity.get('methods').forEach(function(value, key) {
+        code.insertNewLine(key + ' = -> ' + value)
+    })
+
+    //add edited method definition
+    code.insertNewLine(methodName + ' = -> ' + entity.getIn(['methods', methodName]))
+
+    // add execute method line
+    code.insertNewLine(methodName + '()')
+
+    //create the json that holds all the properties to be used for extracting outputs from the run
+    code.insertNewLine('output = ')
+    entity.get('properties').forEach(function(value, key) {
+        code.insertNewLine(key)
+    })
+
+    //run the code
+    let jsCode = CoffeeScript.compile(code.text)
+    let output = eval(jsCode)
+
+    //extract properties and update the entity model
+
+    //revert to previous properties
+}
+
 
 export default function editorsReducer(state = initialState, action = undefined) {
 
@@ -38,6 +84,8 @@ export default function editorsReducer(state = initialState, action = undefined)
         }
         currentBody += action.text + ' '
         return state.setIn(['entities', action.entityId, 'methods', action.methodName], currentBody)
+    case types.RUN_METHOD:
+        runMethod()
     default:
         return state
     }

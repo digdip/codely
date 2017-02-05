@@ -32,6 +32,7 @@ class CodingContainer extends Component {
                 <TextualEditor
                     data={entity}
                     onChange={this.onMethodBodyChange}
+                    runCode={this.props.actions.runMethod}
                     />
             </div>
         )

@@ -49,3 +49,11 @@ export function insertTextToMethod(entityId, methodName, text) {
         text
     }
 }
+
+export function runMethod(entityId, methodName) {
+    return {
+        type: types.RUN_METHOD,
+        entityId,
+        methodName
+    }
+}
