@@ -19,7 +19,15 @@ const webpackConfig = {
     root       : project.paths.client(),
     extensions : ['', '.js', '.jsx', '.json']
   },
-  module : {}
+  module : {},
+  node: {
+    module: 'empty',
+    fs: 'empty',
+    child_process: 'empty',
+    coffee: 'empty',
+    cake: 'empty'
+  }
+
 }
 // ------------------------------------
 // Entry Points
@@ -134,6 +142,12 @@ webpackConfig.module.loaders = [{
 // We use cssnano with the postcss loader, so we tell
 // css-loader not to duplicate minimization.
 const BASE_CSS_LOADER = 'css?sourceMap&-minimize'
+
+webpackConfig.module.loaders.push({
+  test    : /(coffee|cake)$/,
+  exclude : null,
+  loader  : 'empty-loader'
+})
 
 webpackConfig.module.loaders.push({
   test    : /\.scss$/,

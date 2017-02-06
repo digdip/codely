@@ -12,7 +12,7 @@ class VisualizingEntity extends Component {
 
                     <rect width={properties.width * appConstants.GRID_SIZE_PIXELS}
                           height={properties.height * appConstants.GRID_SIZE_PIXELS}
-                          style={{ fill: properties.color, strokeWidth: "2", stroke: "rgb(0,0,0)"}} />
+                          style={{ fill: 'RED', strokeWidth: "2", stroke: "rgb(0,0,0)"}} />
             </svg>
         )
     }

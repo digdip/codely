@@ -16,7 +16,7 @@ const initialState = Immutable.fromJS({
     selectedEntityId: null
 })
 
-function runMethod(entity, method, methodName) {
+function runMethod(entity, methodName) {
     //store current properties so we can revert to it after run
 
     let code = {
@@ -25,7 +25,7 @@ function runMethod(entity, method, methodName) {
             this.text += line + '\n'
         }
     }
-    code.insertNewLine('use strict')
+    code.insertNewLine('"use strict"')
 
     //prepare context
 
@@ -39,25 +39,28 @@ function runMethod(entity, method, methodName) {
         code.insertNewLine(key + ' = -> ' + value)
     })
 
-    //add edited method definition
-    code.insertNewLine(methodName + ' = -> ' + entity.getIn(['methods', methodName]))
-
     // add execute method line
     code.insertNewLine(methodName + '()')
 
     //create the json that holds all the properties to be used for extracting outputs from the run
-    code.insertNewLine('output = ')
+    code.insertNewLine('return {')
     entity.get('properties').forEach(function(value, key) {
-        code.insertNewLine(key)
+        code.insertNewLine('    ' + key + ':' + key + ',')
     })
+
+    code.text = code.text.substr(0, code.text.length - 2)
+    code.insertNewLine('}')
 
     //run the code
     let jsCode = CoffeeScript.compile(code.text)
     let output = eval(jsCode)
 
     //extract properties and update the entity model
+    entity.get('properties').forEach(function(value, key) {
+        entity = entity.setIn(['properties', key], output[key])
+    })
 
-    //revert to previous properties
+    return entity
 }
 
 
@@ -85,7 +88,8 @@ export default function editorsReducer(state = initialState, action = undefined)
         currentBody += action.text + ' '
         return state.setIn(['entities', action.entityId, 'methods', action.methodName], currentBody)
     case types.RUN_METHOD:
-        runMethod()
+        let entity = runMethod(state.getIn(['entities', action.entityId]), action.methodName)
+        return state.setIn(['entities', action.entityId], entity)
     default:
         return state
     }
@@ -110,8 +114,7 @@ function createSquare() {
             leftRight: DEFAULT_X_POSITION + counter * DEFAULT_WIDTH * 2,
             upDown   : DEFAULT_Y_POSITION,
             width    : DEFAULT_WIDTH,
-            height   : DEFAULT_HEIGHT,
-            color    : DEFAULT_COLOR
+            height   : DEFAULT_HEIGHT
         },
         methods: {},
         selectedMethod: ''
