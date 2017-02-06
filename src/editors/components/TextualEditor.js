@@ -64,9 +64,9 @@ const TextualEditor = React.createClass({
         return (
             <div className='codeTextEditorContainer'>
                 <div className='toolbar'>
-                    <Button style={{minWidth: '0', width: '30px', height: '30px', padding: '0', lineHeight: '0'}}
+                    <Button style={{minWidth: '0', width: '50px', height: '30px', padding: '2px', lineHeight: '0'}}
                             onClick={this.runCode}>
-                        <Icon name="add" style={{fontSize: '18'}}/>
+                        Run
                     </Button>
                 </div>
                 <AceEditor
