@@ -65,7 +65,7 @@ class MethodsList extends Component {
                     <div className='toolbar'>
                         <Button style={{minWidth: '0', width: '30px', height: '30px', padding: '0', lineHeight: '0'}}
                                 onClick={this.openDialog}>
-                            <Icon name="add" style={{fontSize: '18'}}/>
+                            <Icon name="add" style={{fontSize: '18px'}}/>
                         </Button>
                     </div>
                     <List listItems={tableModel}

@@ -36,7 +36,7 @@ function runMethod(entity, methodName) {
 
     //////add all methods to code
     entity.get('methods').forEach(function(value, key) {
-        code.insertNewLine(key + ' = -> ' + value)
+        code.insertNewLine(key + ' = -> ' + value.replace(/(?:\r\n|\r|\n)/g, ';'))
     })
 
     // add execute method line
