@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import * as appConstants from '../../const/appConstants'
 
-class VisualizingEntity extends Component {
+class VisualEntity extends Component {
 
     render () {
         let properties = this.props.data.toJS()
@@ -18,4 +18,4 @@ class VisualizingEntity extends Component {
     }
 }
 
-export default VisualizingEntity
+export default VisualEntity

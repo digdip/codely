@@ -16,7 +16,7 @@ export default class KeyValueListItem extends Component {
         return (
             <div className='keyValueListItem'>
                 <div onClick={this.onClick}>{this.props.text}</div>
-                <input value={this.props.inputValue}/>
+                <input value={this.props.inputValue} onChange={function(){}}/>
             </div>
         )
     }

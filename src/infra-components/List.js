@@ -17,6 +17,7 @@ export default class List extends Component {
                 {this.props.listItems.map((listItem) =>
                     <ListItem
                         id={listItem.id}
+                        key={listItem.id}
                         text={listItem.text}
                         isSelected={listItem.isSelected}
                         onClick={this.onItemClicked}

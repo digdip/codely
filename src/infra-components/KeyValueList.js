@@ -17,6 +17,7 @@ export default class KeyValueList extends Component {
                 {this.props.listItems.map((listItem) =>
                     <KeyValueListItem
                         id={listItem.id}
+                        key={listItem.id}
                         text={listItem.text}
                         inputValue={listItem.inputValue}
                         isSelected={listItem.isSelected}
