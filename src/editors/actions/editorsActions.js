@@ -57,3 +57,10 @@ export function runMethod(entityId, methodName) {
         methodName
     }
 }
+
+export function runNextLine(entityId) {
+    return {
+        type: types.RUN_NEXT_LINE,
+        entityId
+    }
+}

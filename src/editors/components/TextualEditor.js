@@ -16,20 +16,19 @@ import {Button, Icon} from 'react-mdl'
 
 const TextualEditor = React.createClass({
 
-
     propTypes: {
         disabled: React.PropTypes.bool,
-        value: React.PropTypes.string,
-        width: React.PropTypes.string,
-        height: React.PropTypes.string,
+        value   : React.PropTypes.string,
+        width   : React.PropTypes.string,
+        height  : React.PropTypes.string,
         fontSize: React.PropTypes.number
     },
 
     getDefaultProps() {
         return {
             disabled: false,
-            value: '',
-            width: '100%',
+            value   : '',
+            width   : '100%',
             fontSize: 14
         }
     },
@@ -47,9 +46,16 @@ const TextualEditor = React.createClass({
     componentDidUpdate(prevProps) {
         let selectedMethodBody = this.props.data ? this.props.data.getIn(['methods', this.props.data.get('selectedMethod')]) : ''
         let prevSelectedMethodBody = prevProps.data ? prevProps.data.getIn(['methods', prevProps.data.get('selectedMethod')]) : ''
+        let runNextLine = this.props.runNextLine
+        let entityId = this.props.data.get('id')
         if (selectedMethodBody !== prevSelectedMethodBody) {
             this.refs.editor.editor.focus()
         }
+        if (this.props.data.getIn(['run', 'lineNumber']) > -1) {
+            setTimeout(function () {
+                runNextLine(entityId)}, 1100)
+        }
+
     },
 
     render() {
@@ -74,8 +80,8 @@ const TextualEditor = React.createClass({
                     theme="textmate"
                     name={this.props.seleniumId + '_textualEditor_' + timeStep}
                     value={selectedMethodBody}
-                    readOnly = {!this.props.data || !this.props.data.get('selectedMethod')}
-                    highlightActiveLine = {!this.props.disabled}
+                    readOnly={!this.props.data || !this.props.data.get('selectedMethod')}
+                    highlightActiveLine={!this.props.disabled}
                     editorProps={{$blockScrolling: true}}
                     setOptions={{highlightGutterLine: !this.props.disabled}}
                     enableBasicAutocompletion={true}

@@ -17,6 +17,11 @@ const initialState = Immutable.fromJS({
 })
 
 function runMethod(entity, methodName) {
+    entity = entity.setIn(['run', 'methodName'], methodName)
+    return runMethodNextLine(entity)
+}
+
+function runMethodNextLine(entity) {
     //store current properties so we can revert to it after run
 
     let code = {
@@ -27,6 +32,13 @@ function runMethod(entity, methodName) {
     }
     code.insertNewLine('"use strict"')
 
+    let methodName = entity.getIn(['run', 'methodName'])
+    let lineNumber = entity.getIn(['run', 'lineNumber'])
+    let runComplete = false
+
+    //increment line number
+    entity = entity.setIn(['run', 'lineNumber'], ++lineNumber)
+
     //prepare context
 
     //////add properties of the entity to code
@@ -34,9 +46,17 @@ function runMethod(entity, methodName) {
         code.insertNewLine(key + ' = ' + value)
     })
 
-    //////add all methods to code
+    //////add all other methods to code
     entity.get('methods').forEach(function(value, key) {
-        code.insertNewLine(key + ' = -> ' + value.replace(/(?:\r\n|\r|\n)/g, ';'))
+        if(key !== methodName) {
+            code.insertNewLine(key + ' = -> ' + value.replace(/(?:\r\n|\r|\n)/g, ';'))
+        } else {
+            let methodLines = value.split(/(?:\r\n|\r|\n)/g)
+            if (lineNumber === methodLines.length - 1) {
+                runComplete = true
+            }
+            code.insertNewLine(key + ' = -> ' + methodLines[lineNumber])
+        }
     })
 
     // add execute method line
@@ -59,6 +79,10 @@ function runMethod(entity, methodName) {
     entity.get('properties').forEach(function(value, key) {
         entity = entity.setIn(['properties', key], output[key])
     })
+
+    if (runComplete) {
+        entity = entity.setIn(['run', 'lineNumber'], -1)
+    }
 
     return entity
 }
@@ -88,8 +112,9 @@ export default function editorsReducer(state = initialState, action = undefined)
         currentBody += action.text + ' '
         return state.setIn(['entities', action.entityId, 'methods', action.methodName], currentBody)
     case types.RUN_METHOD:
-        let entity = runMethod(state.getIn(['entities', action.entityId]), action.methodName)
-        return state.setIn(['entities', action.entityId], entity)
+        return state.setIn(['entities', action.entityId], runMethod(state.getIn(['entities', action.entityId]), action.methodName))
+    case types.RUN_NEXT_LINE:
+        return state.setIn(['entities', action.entityId], runMethodNextLine(state.getIn(['entities', action.entityId])))
     default:
         return state
     }
@@ -117,8 +142,11 @@ function createSquare() {
             height   : DEFAULT_HEIGHT
         },
         methods: {},
-        selectedMethod: ''
-
+        selectedMethod: '',
+        run: {
+            lineNumber: -1,
+            methodName: ''
+        }
     })
 }
 
