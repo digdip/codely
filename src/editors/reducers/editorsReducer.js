@@ -1,5 +1,6 @@
 import * as types from '../../const/actionTypes'
 import * as entityTypes from  '../../const/entityTypes'
+import * as grammar from  '../../const/grammar'
 import Immutable from 'immutable'
 import CoffeeScript from 'coffee-script'
 
@@ -13,8 +14,16 @@ let counter = 0
 
 const initialState = Immutable.fromJS({
     entities: {},
-    selectedEntityId: null
+    selectedEntityId: null,
+    demos: {
+        '1': createDemo1()
+    }
 })
+
+function createDemo1() {
+    let script = 'Left = Left + 20'
+    return createEntity(entityTypes.SQUARE, script)
+}
 
 function runMethod(entity, methodName) {
     entity = entity.setIn(['run', 'methodName'], methodName)
@@ -115,39 +124,44 @@ export default function editorsReducer(state = initialState, action = undefined)
         return state.setIn(['entities', action.entityId], runMethod(state.getIn(['entities', action.entityId]), action.methodName))
     case types.RUN_NEXT_LINE:
         return state.setIn(['entities', action.entityId], runMethodNextLine(state.getIn(['entities', action.entityId])))
+    case types.PLAY_DEMO:
+        return state.setIn(['demos', action.demoId], runMethod(state.getIn(['demos', action.demoId]), 'run'))
     default:
         return state
     }
 
 }
 
-function createEntity(entityType) {
+function createEntity(entityType, runMethodScript) {
     switch (entityType) {
     case entityTypes.SQUARE:
-        return createSquare()
+        return createSquare(runMethodScript)
     default:
         return {}
     }
 }
 
-function createSquare() {
-    return Immutable.fromJS({
+function createSquare(runMethodScript) {
+    let json = {
         id: counter,
         key: counter++,
         entityType: entityTypes.SQUARE,
-        properties: {
-            leftRight: DEFAULT_X_POSITION + counter * DEFAULT_WIDTH * 2,
-            upDown   : DEFAULT_Y_POSITION,
-            width    : DEFAULT_WIDTH,
-            height   : DEFAULT_HEIGHT
+        properties: {},
+        methods: {
+            run: runMethodScript ? runMethodScript : ''
         },
-        methods: {},
-        selectedMethod: '',
+        selectedMethod: 'run',
         run: {
             lineNumber: -1,
             methodName: ''
         }
-    })
+    }
+    json.properties[grammar.X] = DEFAULT_X_POSITION
+    json.properties[grammar.Y] = DEFAULT_Y_POSITION
+    json.properties[grammar.WIDTH] = DEFAULT_WIDTH
+    json.properties[grammar.HEIGHT] = DEFAULT_HEIGHT
+
+    return Immutable.fromJS(json)
 }
 
 

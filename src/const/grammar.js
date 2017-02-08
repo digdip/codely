@@ -1,0 +1,5 @@
+export const X = 'Left'
+export const Y = 'Top'
+export const WIDTH = 'Width'
+export const HEIGHT = 'Height'
+export const COLOR = 'Color'

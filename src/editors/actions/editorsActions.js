@@ -64,3 +64,10 @@ export function runNextLine(entityId) {
         entityId
     }
 }
+
+export function playDemo(demoId) {
+    return {
+        type: types.PLAY_DEMO,
+        demoId
+    }
+}
