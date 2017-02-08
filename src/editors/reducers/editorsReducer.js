@@ -121,6 +121,10 @@ export default function editorsReducer(state = initialState, action = undefined)
             currentBody += action.text + ' '
             return state.setIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName], currentBody)
         case types.RUN_METHOD:
+            if(action.methodName === 'main') {
+                //play the demo also (hard coded 1 as the demo for now
+                state = state.setIn([grammar.DEMOS, '1'], runMethod(state.getIn([grammar.DEMOS, '1']), grammar.MAIN_METHOD))
+            }
             return state.setIn([grammar.ENTITIES, action.entityId], runMethod(state.getIn([grammar.ENTITIES, action.entityId]), action.methodName))
         case types.RUN_NEXT_LINE:
             return state.setIn([grammar.ENTITIES, action.entityId], runMethodNextLine(state.getIn([grammar.ENTITIES, action.entityId])))
@@ -129,15 +133,20 @@ export default function editorsReducer(state = initialState, action = undefined)
         case types.PLAY_DEMO:
             return state.setIn([grammar.DEMOS, action.demoId], runMethod(state.getIn([grammar.DEMOS, action.demoId]), grammar.MAIN_METHOD))
         case types.RESET_DEMO:
-            //the next line tries to stop running the demo, for some reason it doesn't work
-            state = state.setIn([grammar.DEMOS, action.demoId], resetRun(state.getIn([grammar.DEMOS, action.demoId])))
-            return state.setIn([grammar.DEMOS, action.demoId], resetEntityProps(state.getIn([grammar.DEMOS, action.demoId])))
+            return resetDemo(state, action.demoId)
         case types.RESET_ENTITY:
+            state = resetDemo(state, '1')
             return state.setIn([grammar.ENTITIES, action.entityId], resetEntityProps(state.getIn([grammar.ENTITIES, action.entityId])))
         default:
             return state
     }
 
+}
+
+function resetDemo(state, demoId) {
+    //the next line tries to stop running the demo, for some reason it doesn't work
+    state = state.setIn([grammar.DEMOS, demoId], resetRun(state.getIn([grammar.DEMOS, demoId])))
+    return state.setIn([grammar.DEMOS, demoId], resetEntityProps(state.getIn([grammar.DEMOS, demoId])))
 }
 
 function createEntity(entityType, runMethodScript) {

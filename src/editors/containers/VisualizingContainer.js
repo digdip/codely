@@ -50,10 +50,10 @@ class VisualizingContainer extends Component {
                     </Button>
                 </div>
                 <div>
-                    <VisualEntity data={this.props.demos.getIn(['1', 'properties'])} isGhost={true}/>
                     {this.props.entities.map((entity) =>
                         <VisualEntity data={entity.get('properties')}/>
                     )}
+                    <VisualEntity data={this.props.demos.getIn(['1', 'properties'])} isGhost={true}/>
                 </div>
             </div>
         )
