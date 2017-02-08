@@ -35,6 +35,7 @@ class CodingContainer extends Component {
                     onChange={this.onMethodBodyChange}
                     runCode={this.props.actions.runMethod}
                     runNextLine={this.props.actions.runNextLine}
+                    resetEntity={this.props.actions.resetEntity}
                     />
             </div>
         )

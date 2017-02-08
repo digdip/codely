@@ -44,6 +44,10 @@ const TextualEditor = React.createClass({
         this.props.runCode(this.props.data.get('id'), this.props.data.get('selectedMethod'))
     },
 
+    resetPosition() {
+        this.props.resetEntity(this.props.data.get('id'))
+    },
+
     componentDidUpdate(prevProps) {
         let selectedMethodBody = this.props.data ? this.props.data.getIn(['methods', this.props.data.get('selectedMethod')]) : ''
         let prevSelectedMethodBody = prevProps.data ? prevProps.data.getIn(['methods', prevProps.data.get('selectedMethod')]) : ''
@@ -74,6 +78,10 @@ const TextualEditor = React.createClass({
                     <Button style={{minWidth: '0', width: '50px', height: '30px', padding: '2px', lineHeight: '0'}}
                             onClick={this.runCode}>
                         Run
+                    </Button>
+                    <Button style={{minWidth: '0', width: '60px', height: '30px', padding: '2px', lineHeight: '0'}}
+                            onClick={this.resetPosition}>
+                        Reset
                     </Button>
                 </div>
                 <AceEditor

@@ -85,3 +85,10 @@ export function resetDemo(demoId) {
         demoId
     }
 }
+
+export function resetEntity(entityId) {
+    return {
+        type: types.RESET_ENTITY,
+        entityId
+    }
+}
