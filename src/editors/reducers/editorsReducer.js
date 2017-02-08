@@ -21,12 +21,12 @@ const initialState = Immutable.fromJS({
 })
 
 function createDemo1() {
-    let script = 'Left = Left + 20'
+    let script = 'Left += 10\nWidth += 3\nLeft += 10\nWidth += 3\nTop +=3\nHeight +=2\nTop +=3\nHeight +=2'
     return createEntity(entityTypes.SQUARE, script)
 }
 
 function runMethod(entity, methodName) {
-    entity = entity.setIn(['run', 'methodName'], methodName)
+    entity = entity.setIn([grammar.RUN_DATA, 'methodName'], methodName)
     return runMethodNextLine(entity)
 }
 
@@ -41,12 +41,12 @@ function runMethodNextLine(entity) {
     }
     code.insertNewLine('"use strict"')
 
-    let methodName = entity.getIn(['run', 'methodName'])
-    let lineNumber = entity.getIn(['run', 'lineNumber'])
+    let methodName = entity.getIn([grammar.RUN_DATA, 'methodName'])
+    let lineNumber = entity.getIn([grammar.RUN_DATA, 'lineNumber'])
     let runComplete = false
 
     //increment line number
-    entity = entity.setIn(['run', 'lineNumber'], ++lineNumber)
+    entity = entity.setIn([grammar.RUN_DATA, 'lineNumber'], ++lineNumber)
 
     //prepare context
 
@@ -90,7 +90,7 @@ function runMethodNextLine(entity) {
     })
 
     if (runComplete) {
-        entity = entity.setIn(['run', 'lineNumber'], -1)
+        entity = entity.setIn([grammar.RUN_DATA, 'lineNumber'], -1)
     }
 
     return entity
@@ -102,30 +102,32 @@ export default function editorsReducer(state = initialState, action = undefined)
     switch (action.type) {
     case types.ADD_NEW_ENTITY:
         let newEntity = createEntity(action.entityType)
-        state = state.setIn(['entities', newEntity.get('id')], newEntity)
-        return state.set('selectedEntityId', newEntity.get('id'))
+        state = state.setIn([grammar.ENTITIES, newEntity.get('id')], newEntity)
+        return state.set(grammar.SELECTED_ENTITY_ID, newEntity.get('id'))
     case types.SAVE_ENTITY:
         return state
     case types.ADD_NEW_METHOD:
-        state = state.setIn(['entities', action.entityId, 'methods', action.methodName], '')
-        return state.setIn(['entities', action.entityId, 'selectedMethod'], action.methodName)
+        state = state.setIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName], '')
+        return state.setIn([grammar.ENTITIES, action.entityId, 'selectedMethod'], action.methodName)
     case types.SELECT_METHOD:
-        return state.setIn(['entities', action.entityId, 'selectedMethod'], action.methodName)
+        return state.setIn([grammar.ENTITIES, action.entityId, 'selectedMethod'], action.methodName)
     case types.UPDATE_METHOD_BODY:
-        return state.setIn(['entities', action.entityId, 'methods', action.methodName], action.methodBody)
+        return state.setIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName], action.methodBody)
     case types.INSERT_TEXT_TO_METHOD:
-        let currentBody = state.getIn(['entities', action.entityId, 'methods', action.methodName])
+        let currentBody = state.getIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName])
         if (currentBody && !currentBody.endsWith(' ')) {
             currentBody += ' '
         }
         currentBody += action.text + ' '
-        return state.setIn(['entities', action.entityId, 'methods', action.methodName], currentBody)
+        return state.setIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName], currentBody)
     case types.RUN_METHOD:
-        return state.setIn(['entities', action.entityId], runMethod(state.getIn(['entities', action.entityId]), action.methodName))
+        return state.setIn([grammar.ENTITIES, action.entityId], runMethod(state.getIn([grammar.ENTITIES, action.entityId]), action.methodName))
     case types.RUN_NEXT_LINE:
-        return state.setIn(['entities', action.entityId], runMethodNextLine(state.getIn(['entities', action.entityId])))
+        return state.setIn([grammar.ENTITIES, action.entityId], runMethodNextLine(state.getIn([grammar.ENTITIES, action.entityId])))
+    case types.RUN_NEXT_DEMO_LINE:
+        return state.setIn([grammar.DEMOS, action.demoId], runMethodNextLine(state.getIn([grammar.DEMOS, action.demoId])))
     case types.PLAY_DEMO:
-        return state.setIn(['demos', action.demoId], runMethod(state.getIn(['demos', action.demoId]), 'run'))
+        return state.setIn([grammar.DEMOS, action.demoId], runMethod(state.getIn([grammar.DEMOS, action.demoId]), grammar.MAIN_METHOD))
     default:
         return state
     }
@@ -147,15 +149,14 @@ function createSquare(runMethodScript) {
         key: counter++,
         entityType: entityTypes.SQUARE,
         properties: {},
-        methods: {
-            run: runMethodScript ? runMethodScript : ''
-        },
-        selectedMethod: 'run',
-        run: {
-            lineNumber: -1,
-            methodName: ''
-        }
+        methods: {},
+        selectedMethod: grammar.MAIN_METHOD
     }
+    json[grammar.RUN_DATA] = {
+        lineNumber: -1,
+        methodName: ''
+    }
+    json.methods[grammar.MAIN_METHOD] = runMethodScript ? runMethodScript : ''
     json.properties[grammar.X] = DEFAULT_X_POSITION
     json.properties[grammar.Y] = DEFAULT_Y_POSITION
     json.properties[grammar.WIDTH] = DEFAULT_WIDTH

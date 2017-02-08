@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as editorsActions from '../actions/editorsActions'
+import * as grammar from  '../../const/grammar'
 
 import TextualEditor from '../components/TextualEditor'
 import PropertiesList from '../components/PropertiesList'
@@ -42,8 +43,8 @@ class CodingContainer extends Component {
 
 function select(state) {
     return {
-        entities: state.editorsReducer.get('entities'),
-        selectedEntityId: state.editorsReducer.get('selectedEntityId')
+        entities: state.editorsReducer.get(grammar.ENTITIES),
+        selectedEntityId: state.editorsReducer.get(grammar.SELECTED_ENTITY_ID)
     }
 }
 

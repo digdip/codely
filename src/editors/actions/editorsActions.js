@@ -65,6 +65,13 @@ export function runNextLine(entityId) {
     }
 }
 
+export function runNextDemoLine(demoId) {
+    return {
+        type: types.RUN_NEXT_DEMO_LINE,
+        demoId
+    }
+}
+
 export function playDemo(demoId) {
     return {
         type: types.PLAY_DEMO,

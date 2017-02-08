@@ -5,6 +5,7 @@ import {Button} from 'react-mdl'
 import VisualEntity from '../components/VisualEntity'
 import * as editorsActions from '../actions/editorsActions'
 import * as entityTypes from '../../const/entityTypes'
+import * as grammar from  '../../const/grammar'
 
 class VisualizingContainer extends Component {
 
@@ -17,6 +18,14 @@ class VisualizingContainer extends Component {
         this.props.actions.addNewEntity(entityTypes.SQUARE)
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props.demos.getIn(['1', grammar.RUN_DATA, 'lineNumber']) > -1) {
+            let runNextDemoLine = this.props.actions.runNextDemoLine
+            setTimeout(function () {
+                runNextDemoLine('1')}, 1100)
+        }
+    }
+
     playDemo() {
         this.props.actions.playDemo('1')
     }
@@ -26,9 +35,9 @@ class VisualizingContainer extends Component {
 
             <div className='visualContainer'>
                 <div className='toolbar'>
-                    <Button style={{minWidth: '0', width: '50px', height: '30px', padding: '2px', lineHeight: '0'}}
+                    <Button style={{minWidth: '0', width: '90px', height: '30px', padding: '2px', lineHeight: '0'}}
                             onClick={this.playDemo}>
-                        Play
+                        Play Demo
                     </Button>
                 </div>
                 <div>
@@ -45,8 +54,8 @@ class VisualizingContainer extends Component {
 
 function select(state) {
     return {
-        entities: state.editorsReducer.get('entities'),
-        demos: state.editorsReducer.get('demos')
+        entities: state.editorsReducer.get(grammar.ENTITIES),
+        demos: state.editorsReducer.get(grammar.DEMOS)
     }
 }
 

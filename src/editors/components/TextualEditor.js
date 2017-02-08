@@ -4,6 +4,7 @@ import 'brace/mode/coffee'
 import 'brace/theme/textmate'
 import 'brace/ext/language_tools'
 import {Button, Icon} from 'react-mdl'
+import * as grammar from  '../../const/grammar'
 
 /*
  Wrapper for ReactAce
@@ -51,7 +52,7 @@ const TextualEditor = React.createClass({
         if (selectedMethodBody !== prevSelectedMethodBody) {
             this.refs.editor.editor.focus()
         }
-        if (this.props.data.getIn(['run', 'lineNumber']) > -1) {
+        if (this.props.data.getIn([grammar.RUN_DATA, 'lineNumber']) > -1) {
             setTimeout(function () {
                 runNextLine(entityId)}, 1100)
         }
