@@ -78,3 +78,10 @@ export function playDemo(demoId) {
         demoId
     }
 }
+
+export function resetDemo(demoId) {
+    return {
+        type: types.RESET_DEMO,
+        demoId
+    }
+}

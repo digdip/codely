@@ -12,6 +12,7 @@ class VisualizingContainer extends Component {
     constructor(props) {
         super(props)
         this.playDemo = this.playDemo.bind(this)
+        this.resetDemo = this.resetDemo.bind(this)
     }
 
     componentDidMount() {
@@ -30,6 +31,10 @@ class VisualizingContainer extends Component {
         this.props.actions.playDemo('1')
     }
 
+    resetDemo() {
+        this.props.actions.resetDemo('1')
+    }
+
     render () {
         return (
 
@@ -38,6 +43,10 @@ class VisualizingContainer extends Component {
                     <Button style={{minWidth: '0', width: '90px', height: '30px', padding: '2px', lineHeight: '0'}}
                             onClick={this.playDemo}>
                         Play Demo
+                    </Button>
+                    <Button style={{minWidth: '0', width: '100px', height: '30px', padding: '2px', lineHeight: '0'}}
+                            onClick={this.resetDemo}>
+                        Reset Demo
                     </Button>
                 </div>
                 <div>

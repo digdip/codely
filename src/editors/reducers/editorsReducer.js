@@ -128,6 +128,8 @@ export default function editorsReducer(state = initialState, action = undefined)
         return state.setIn([grammar.DEMOS, action.demoId], runMethodNextLine(state.getIn([grammar.DEMOS, action.demoId])))
     case types.PLAY_DEMO:
         return state.setIn([grammar.DEMOS, action.demoId], runMethod(state.getIn([grammar.DEMOS, action.demoId]), grammar.MAIN_METHOD))
+    case types.RESET_DEMO:
+        return state.setIn([grammar.DEMOS, action.demoId], resetEntityProps(state.getIn([grammar.DEMOS, action.demoId])))
     default:
         return state
     }
@@ -165,4 +167,10 @@ function createSquare(runMethodScript) {
     return Immutable.fromJS(json)
 }
 
-
+function resetEntityProps(entity) {
+    entity = entity.setIn(['properties', grammar.X], DEFAULT_X_POSITION)
+    entity = entity.setIn(['properties', grammar.Y], DEFAULT_Y_POSITION)
+    entity = entity.setIn(['properties', grammar.WIDTH], DEFAULT_WIDTH)
+    entity = entity.setIn(['properties', grammar.HEIGHT], DEFAULT_HEIGHT)
+    return entity
+}
