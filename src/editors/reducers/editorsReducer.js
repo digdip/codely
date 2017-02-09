@@ -25,13 +25,63 @@ function createDemo1() {
     return createEntity(entityTypes.SQUARE, script)
 }
 
+export default function editorsReducer(state = initialState, action = undefined) {
+
+    switch (action.type) {
+        case types.ADD_NEW_ENTITY:
+            let newEntity = createEntity(action.entityType)
+            state = state.setIn([grammar.ENTITIES, newEntity.get('id')], newEntity)
+            return state.set(grammar.SELECTED_ENTITY_ID, newEntity.get('id'))
+        case types.SAVE_ENTITY:
+            return state
+        case types.ADD_NEW_METHOD:
+            state = state.setIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName], '')
+            return state.setIn([grammar.ENTITIES, action.entityId, 'selectedMethod'], action.methodName)
+        case types.SELECT_METHOD:
+            return state.setIn([grammar.ENTITIES, action.entityId, 'selectedMethod'], action.methodName)
+        case types.UPDATE_METHOD_BODY:
+            return state.setIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName], action.methodBody)
+        case types.INSERT_TEXT_TO_METHOD:
+            let currentBody = state.getIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName])
+            if (currentBody && !currentBody.endsWith(' ')) {
+                currentBody += ' '
+            }
+            currentBody += action.text + ' '
+            return state.setIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName], currentBody)
+        case types.RUN_METHOD:
+            if(action.methodName === 'main') {
+                //play the demo also (hard coded 1 as the demo for now
+                state = state.setIn([grammar.DEMOS, '1'], runMethod(state.getIn([grammar.DEMOS, '1']), grammar.MAIN_METHOD))
+            }
+            return state.setIn([grammar.ENTITIES, action.entityId], runMethod(state.getIn([grammar.ENTITIES, action.entityId]), action.methodName))
+        case types.RUN_NEXT_LINE:
+            return state.setIn([grammar.ENTITIES, action.entityId], runMethodNextLine(state.getIn([grammar.ENTITIES, action.entityId])))
+        case types.RUN_NEXT_DEMO_LINE:
+            return state.setIn([grammar.DEMOS, action.demoId], runMethodNextLine(state.getIn([grammar.DEMOS, action.demoId])))
+        case types.PLAY_DEMO:
+            return state.setIn([grammar.DEMOS, action.demoId], runMethod(state.getIn([grammar.DEMOS, action.demoId]), grammar.MAIN_METHOD))
+        case types.RESET_DEMO:
+            return state.setIn([grammar.DEMOS, action.demoId], resetRun(state.getIn([grammar.DEMOS, action.demoId])))
+        case types.RESET_ENTITY:
+            state = state.setIn([grammar.ENTITIES, action.entityId], resetRun(state.getIn([grammar.ENTITIES, action.entityId])))
+            return state.setIn([grammar.DEMOS, '1'], resetRun(state.getIn([grammar.DEMOS, '1'])))
+        default:
+            return state
+    }
+
+}
+
 function runMethod(entity, methodName) {
     entity = entity.setIn([grammar.RUN_DATA, 'methodName'], methodName)
+    entity = entity.setIn([grammar.RUN_DATA, grammar.RUN_CANCELED], false)
     return runMethodNextLine(entity)
 }
 
 function runMethodNextLine(entity) {
-    //store current properties so we can revert to it after run
+
+    if (entity.getIn([grammar.RUN_DATA, grammar.RUN_CANCELED])) {
+        return entity
+    }
 
     let code = {
         text: '',
@@ -96,58 +146,12 @@ function runMethodNextLine(entity) {
     return entity
 }
 
-
-export default function editorsReducer(state = initialState, action = undefined) {
-
-    switch (action.type) {
-        case types.ADD_NEW_ENTITY:
-            let newEntity = createEntity(action.entityType)
-            state = state.setIn([grammar.ENTITIES, newEntity.get('id')], newEntity)
-            return state.set(grammar.SELECTED_ENTITY_ID, newEntity.get('id'))
-        case types.SAVE_ENTITY:
-            return state
-        case types.ADD_NEW_METHOD:
-            state = state.setIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName], '')
-            return state.setIn([grammar.ENTITIES, action.entityId, 'selectedMethod'], action.methodName)
-        case types.SELECT_METHOD:
-            return state.setIn([grammar.ENTITIES, action.entityId, 'selectedMethod'], action.methodName)
-        case types.UPDATE_METHOD_BODY:
-            return state.setIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName], action.methodBody)
-        case types.INSERT_TEXT_TO_METHOD:
-            let currentBody = state.getIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName])
-            if (currentBody && !currentBody.endsWith(' ')) {
-                currentBody += ' '
-            }
-            currentBody += action.text + ' '
-            return state.setIn([grammar.ENTITIES, action.entityId, 'methods', action.methodName], currentBody)
-        case types.RUN_METHOD:
-            if(action.methodName === 'main') {
-                //play the demo also (hard coded 1 as the demo for now
-                state = state.setIn([grammar.DEMOS, '1'], runMethod(state.getIn([grammar.DEMOS, '1']), grammar.MAIN_METHOD))
-            }
-            return state.setIn([grammar.ENTITIES, action.entityId], runMethod(state.getIn([grammar.ENTITIES, action.entityId]), action.methodName))
-        case types.RUN_NEXT_LINE:
-            return state.setIn([grammar.ENTITIES, action.entityId], runMethodNextLine(state.getIn([grammar.ENTITIES, action.entityId])))
-        case types.RUN_NEXT_DEMO_LINE:
-            return state.setIn([grammar.DEMOS, action.demoId], runMethodNextLine(state.getIn([grammar.DEMOS, action.demoId])))
-        case types.PLAY_DEMO:
-            return state.setIn([grammar.DEMOS, action.demoId], runMethod(state.getIn([grammar.DEMOS, action.demoId]), grammar.MAIN_METHOD))
-        case types.RESET_DEMO:
-            return resetDemo(state, action.demoId)
-        case types.RESET_ENTITY:
-            state = resetDemo(state, '1')
-            return state.setIn([grammar.ENTITIES, action.entityId], resetEntityProps(state.getIn([grammar.ENTITIES, action.entityId])))
-        default:
-            return state
-    }
-
-}
-
-function resetDemo(state, demoId) {
-    //the next line tries to stop running the demo, for some reason it doesn't work
-    state = state.setIn([grammar.DEMOS, demoId], resetRun(state.getIn([grammar.DEMOS, demoId])))
-    return state.setIn([grammar.DEMOS, demoId], resetEntityProps(state.getIn([grammar.DEMOS, demoId])))
-}
+//
+//function resetDemo(state, demoId) {
+//    //the next line tries to stop running the demo, for some reason it doesn't work
+//    state = state.setIn([grammar.DEMOS, demoId], resetRun(state.getIn([grammar.DEMOS, demoId])))
+//    return state.setIn([grammar.DEMOS, demoId], resetEntityProps(state.getIn([grammar.DEMOS, demoId])))
+//}
 
 function createEntity(entityType, runMethodScript) {
     switch (entityType) {
@@ -169,7 +173,8 @@ function createSquare(runMethodScript) {
     }
     json[grammar.RUN_DATA] = {
         lineNumber: -1,
-        methodName: ''
+        methodName: '',
+        runCanceled: false
     }
     json.methods[grammar.MAIN_METHOD] = runMethodScript ? runMethodScript : ''
     json.properties[grammar.X] = DEFAULT_X_POSITION
@@ -189,5 +194,7 @@ function resetEntityProps(entity) {
 }
 
 function resetRun(entity) {
-    return entity.setIn([grammar.RUN_DATA, 'lineNumber'], -1)
+    entity = entity.setIn([grammar.RUN_DATA, 'lineNumber'], -1)
+    entity = resetEntityProps(entity)
+    return entity.setIn([grammar.RUN_DATA, grammar.RUN_CANCELED], true)
 }

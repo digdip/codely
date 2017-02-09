@@ -35,7 +35,7 @@ class VisualizingContainer extends Component {
         this.props.actions.resetDemo('1')
     }
 
-    render () {
+    render() {
         return (
 
             <div className='visualContainer'>
@@ -60,11 +60,10 @@ class VisualizingContainer extends Component {
     }
 }
 
-
 function select(state) {
     return {
         entities: state.editorsReducer.get(grammar.ENTITIES),
-        demos: state.editorsReducer.get(grammar.DEMOS)
+        demos   : state.editorsReducer.get(grammar.DEMOS)
     }
 }
 

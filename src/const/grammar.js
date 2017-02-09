@@ -11,6 +11,7 @@ export const MAIN_METHOD = 'main'
 
 // keywords
 export const RUN_DATA = 'runData'
+export const RUN_CANCELED = 'runCanceled'
 export const ENTITIES = 'entities'
 export const DEMOS = 'demos'
 export const SELECTED_ENTITY_ID = 'selectedEntityId'
