@@ -20,7 +20,7 @@ class VisualizingContainer extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.demos.getIn(['1', grammar.RUN_DATA, 'lineNumber']) > -1) {
+        if (this.props.demos.getIn(['1', grammar.RUN_DATA, grammar.LINE_NUMBER]) > -1) {
             let runNextDemoLine = this.props.actions.runNextDemoLine
             setTimeout(function () {
                 runNextDemoLine('1')}, 1100)
@@ -51,9 +51,9 @@ class VisualizingContainer extends Component {
                 </div>
                 <div>
                     {this.props.entities.map((entity) =>
-                        <VisualEntity data={entity.get('properties')}/>
+                        <VisualEntity data={entity.get(grammar.PROPERTIES)}/>
                     )}
-                    <VisualEntity data={this.props.demos.getIn(['1', 'properties'])} isGhost={true}/>
+                    <VisualEntity data={this.props.demos.getIn(['1', grammar.PROPERTIES])} isGhost={true}/>
                 </div>
             </div>
         )

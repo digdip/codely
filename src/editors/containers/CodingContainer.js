@@ -19,7 +19,7 @@ class CodingContainer extends Component {
 
     onMethodBodyChange(value) {
         let entity = this.props.entities.get(this.props.selectedEntityId)
-        this.props.actions.updateMethodBody(entity.get('id'), entity.get('selectedMethod'), value)
+        this.props.actions.updateMethodBody(entity.get(grammar.ID), entity.get(grammar.SELECTED_METHOD), value)
     }
 
     render () {

@@ -41,22 +41,22 @@ const TextualEditor = React.createClass({
     },
 
     runCode() {
-        this.props.runCode(this.props.data.get('id'), this.props.data.get('selectedMethod'))
+        this.props.runCode(this.props.data.get(grammar.ID), this.props.data.get(grammar.SELECTED_METHOD))
     },
 
     resetPosition() {
-        this.props.resetEntity(this.props.data.get('id'))
+        this.props.resetEntity(this.props.data.get(grammar.ID))
     },
 
     componentDidUpdate(prevProps) {
-        let selectedMethodBody = this.props.data ? this.props.data.getIn(['methods', this.props.data.get('selectedMethod')]) : ''
-        let prevSelectedMethodBody = prevProps.data ? prevProps.data.getIn(['methods', prevProps.data.get('selectedMethod')]) : ''
+        let selectedMethodBody = this.props.data ? this.props.data.getIn([grammar.METHODS, this.props.data.get(grammar.SELECTED_METHOD)]) : ''
+        let prevSelectedMethodBody = prevProps.data ? prevProps.data.getIn([grammar.METHODS, prevProps.data.get(grammar.SELECTED_METHOD)]) : ''
         let runNextLine = this.props.runNextLine
-        let entityId = this.props.data.get('id')
+        let entityId = this.props.data.get(grammar.ID)
         if (selectedMethodBody !== prevSelectedMethodBody) {
             this.refs.editor.editor.focus()
         }
-        if (this.props.data.getIn([grammar.RUN_DATA, 'lineNumber']) > -1) {
+        if (this.props.data.getIn([grammar.RUN_DATA, grammar.LINE_NUMBER]) > -1) {
             setTimeout(function () {
                 runNextLine(entityId)}, 1100)
         }
@@ -70,7 +70,7 @@ const TextualEditor = React.createClass({
             height = undefined
         }
 
-        let selectedMethodBody = this.props.data ? this.props.data.getIn(['methods', this.props.data.get('selectedMethod')]) : ''
+        let selectedMethodBody = this.props.data ? this.props.data.getIn([grammar.METHODS, this.props.data.get(grammar.SELECTED_METHOD)]) : ''
 
         return (
             <div className='codeTextEditorContainer'>
@@ -89,7 +89,7 @@ const TextualEditor = React.createClass({
                     theme="textmate"
                     name={this.props.seleniumId + '_textualEditor_' + timeStep}
                     value={selectedMethodBody}
-                    readOnly={!this.props.data || !this.props.data.get('selectedMethod')}
+                    readOnly={!this.props.data || !this.props.data.get(grammar.SELECTED_METHOD)}
                     highlightActiveLine={!this.props.disabled}
                     editorProps={{$blockScrolling: true}}
                     setOptions={{highlightGutterLine: !this.props.disabled}}

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import KeyValueList from '../../infra-components/KeyValueList'
+import * as grammar from  '../../const/grammar'
 
 class PropertiesList extends Component {
     constructor(props) {
@@ -8,12 +9,12 @@ class PropertiesList extends Component {
     }
 
     onItemClicked(item) {
-        this.props.insertTextToMethod(this.props.data.get('id'), this.props.data.get('selectedMethod'), item.key)
+        this.props.insertTextToMethod(this.props.data.get(grammar.ID), this.props.data.get(grammar.SELECTED_METHOD), item.key)
     }
 
     render () {
         if (this.props.data) {
-            let properties = this.props.data.get('properties')
+            let properties = this.props.data.get(grammar.PROPERTIES)
             let tableModel = []
             properties.map ((value, key) =>
                 tableModel.push({

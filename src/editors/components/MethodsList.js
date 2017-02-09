@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import {Button, Icon, Dialog, DialogTitle, DialogContent, DialogActions, Textfield} from 'react-mdl'
 import List from '../../infra-components/List'
+import * as grammar from  '../../const/grammar'
 
 class MethodsList extends Component {
 
@@ -29,11 +30,11 @@ class MethodsList extends Component {
 
     addNewMethod() {
         this.closeDialog()
-        this.props.addNewMethod(this.props.data.get('id'), this.refs.methodNameField.inputRef.value)
+        this.props.addNewMethod(this.props.data.get(grammar.ID), this.refs.methodNameField.inputRef.value)
     }
 
     selectMethod(methodName) {
-        this.props.selectMethod(this.props.data.get('id'), methodName)
+        this.props.selectMethod(this.props.data.get(grammar.ID), methodName)
     }
 
     onKeyDown (e) {
@@ -55,7 +56,7 @@ class MethodsList extends Component {
                 tableModel.push({
                     id: methodName,
                     text : methodName,
-                    isSelected : this.props.data.get('selectedMethod') === methodName
+                    isSelected : this.props.data.get(grammar.SELECTED_METHOD) === methodName
                 })
             )
 
