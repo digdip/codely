@@ -65,6 +65,11 @@ export default function editorsReducer(state = initialState, action = undefined)
         case types.RESET_ENTITY:
             state = state.setIn([grammar.ENTITIES, action.entityId], resetRun(state.getIn([grammar.ENTITIES, action.entityId])))
             return state.setIn([grammar.DEMOS, '1'], resetRun(state.getIn([grammar.DEMOS, '1'])))
+        case types.PAUSE_DEMO:
+            return state.setIn([grammar.DEMOS, '1'], pauseRun(state.getIn([grammar.DEMOS, '1'])))
+        case types.PAUSE_ENTITY:
+            state = state.setIn([grammar.ENTITIES, action.entityId], pauseRun(state.getIn([grammar.ENTITIES, action.entityId])))
+            return state.setIn([grammar.DEMOS, '1'], pauseRun(state.getIn([grammar.DEMOS, '1'])))
         default:
             return state
     }
@@ -73,13 +78,13 @@ export default function editorsReducer(state = initialState, action = undefined)
 
 function runMethod(entity, methodName) {
     entity = entity.setIn([grammar.RUN_DATA, grammar.METHOD_NAME], methodName)
-    entity = entity.setIn([grammar.RUN_DATA, grammar.RUN_CANCELED], false)
+    entity = entity.setIn([grammar.RUN_DATA, grammar.RUN_STATUS], grammar.RunStatuses.RUNNING)
     return runMethodNextLine(entity)
 }
 
 function runMethodNextLine(entity) {
 
-    if (entity.getIn([grammar.RUN_DATA, grammar.RUN_CANCELED])) {
+    if (entity.getIn([grammar.RUN_DATA, grammar.RUN_STATUS]) !== grammar.RunStatuses.RUNNING) {
         return entity
     }
 
@@ -141,6 +146,7 @@ function runMethodNextLine(entity) {
 
     if (runComplete) {
         entity = entity.setIn([grammar.RUN_DATA, grammar.LINE_NUMBER], -1)
+        entity = entity.setIn([grammar.RUN_DATA, grammar.RUN_STATUS], grammar.RunStatuses.IDLE)
     }
 
     return entity
@@ -167,7 +173,7 @@ function createSquare(runMethodScript) {
     json[grammar.RUN_DATA] = {
         lineNumber: -1,
         methodName: '',
-        runCanceled: false
+        runStatus: grammar.RunStatuses.IDLE
     }
     json[grammar.METHODS][grammar.MAIN_METHOD] = runMethodScript ? runMethodScript : ''
     json[grammar.PROPERTIES][grammar.X] = DEFAULT_X_POSITION
@@ -189,5 +195,9 @@ function resetEntityProps(entity) {
 function resetRun(entity) {
     entity = entity.setIn([grammar.RUN_DATA, grammar.LINE_NUMBER], -1)
     entity = resetEntityProps(entity)
-    return entity.setIn([grammar.RUN_DATA, grammar.RUN_CANCELED], true)
+    return entity.setIn([grammar.RUN_DATA, grammar.RUN_STATUS], grammar.RunStatuses.IDLE)
+}
+
+function pauseRun(entity) {
+    return entity.setIn([grammar.RUN_DATA, grammar.RUN_STATUS], grammar.RunStatuses.PAUSED)
 }

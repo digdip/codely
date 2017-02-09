@@ -48,6 +48,10 @@ const TextualEditor = React.createClass({
         this.props.resetEntity(this.props.data.get(grammar.ID))
     },
 
+    pauseEntity() {
+        this.props.pauseEntity(this.props.data.get(grammar.ID))
+    },
+
     componentDidUpdate(prevProps) {
         let selectedMethodBody = this.props.data ? this.props.data.getIn([grammar.METHODS, this.props.data.get(grammar.SELECTED_METHOD)]) : ''
         let prevSelectedMethodBody = prevProps.data ? prevProps.data.getIn([grammar.METHODS, prevProps.data.get(grammar.SELECTED_METHOD)]) : ''
@@ -82,6 +86,10 @@ const TextualEditor = React.createClass({
                     <Button style={{minWidth: '0', width: '60px', height: '30px', padding: '2px', lineHeight: '0'}}
                             onClick={this.resetPosition}>
                         Reset
+                    </Button>
+                    <Button style={{minWidth: '0', width: '60px', height: '30px', padding: '2px', lineHeight: '0'}}
+                            onClick={this.pauseEntity}>
+                        Pause
                     </Button>
                 </div>
                 <AceEditor

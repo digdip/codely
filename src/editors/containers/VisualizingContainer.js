@@ -13,6 +13,7 @@ class VisualizingContainer extends Component {
         super(props)
         this.playDemo = this.playDemo.bind(this)
         this.resetDemo = this.resetDemo.bind(this)
+        this.pauseDemo = this.pauseDemo.bind(this)
     }
 
     componentDidMount() {
@@ -20,7 +21,7 @@ class VisualizingContainer extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.demos.getIn(['1', grammar.RUN_DATA, grammar.LINE_NUMBER]) > -1) {
+        if (this.props.demos.getIn(['1', grammar.RUN_DATA, grammar.RUN_STATUS]) === grammar.RunStatuses.RUNNING) {
             let runNextDemoLine = this.props.actions.runNextDemoLine
             setTimeout(function () {
                 runNextDemoLine('1')}, 1100)
@@ -35,6 +36,10 @@ class VisualizingContainer extends Component {
         this.props.actions.resetDemo('1')
     }
 
+    pauseDemo() {
+        this.props.actions.pauseDemo('1')
+    }
+
     render() {
         return (
 
@@ -47,6 +52,10 @@ class VisualizingContainer extends Component {
                     <Button style={{minWidth: '0', width: '100px', height: '30px', padding: '2px', lineHeight: '0'}}
                             onClick={this.resetDemo}>
                         Reset Demo
+                    </Button>
+                    <Button style={{minWidth: '0', width: '60px', height: '30px', padding: '2px', lineHeight: '0'}}
+                            onClick={this.pauseDemo}>
+                        Pause
                     </Button>
                 </div>
                 <div>

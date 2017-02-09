@@ -36,6 +36,7 @@ class CodingContainer extends Component {
                     runCode={this.props.actions.runMethod}
                     runNextLine={this.props.actions.runNextLine}
                     resetEntity={this.props.actions.resetEntity}
+                    pauseEntity={this.props.actions.pauseEntity}
                     />
             </div>
         )

@@ -92,3 +92,17 @@ export function resetEntity(entityId) {
         entityId
     }
 }
+
+export function pauseDemo(demoId) {
+    return {
+        type: types.PAUSE_DEMO,
+        demoId
+    }
+}
+
+export function pauseEntity(entityId) {
+    return {
+        type: types.PAUSE_ENTITY,
+        entityId
+    }
+}
