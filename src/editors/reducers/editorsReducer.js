@@ -40,14 +40,14 @@ export default function editorsReducer(state = initialState, action = undefined)
         case types.SELECT_METHOD:
             return state.setIn([grammar.ENTITIES, action.entityId, grammar.SELECTED_METHOD], action.methodName)
         case types.UPDATE_METHOD_BODY:
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName], action.methodBody)
+            return state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], action.methodBody)
         case types.INSERT_TEXT_TO_METHOD:
-            let currentBody = state.getIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName])
+            let currentBody = state.getIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT])
             if (currentBody && !currentBody.endsWith(' ')) {
                 currentBody += ' '
             }
             currentBody += action.text + ' '
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName], currentBody)
+            return state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], currentBody)
         case types.RUN_METHOD:
             if(action.methodName === grammar.MAIN_METHOD) {
                 //play the demo also (hard coded 1 as the demo for now
@@ -112,10 +112,11 @@ function runMethodNextLine(entity) {
 
     //////add all other methods to code
     entity.get(grammar.METHODS).forEach(function (value, key) {
+        let script = value.get(grammar.METHOD_SCRIPT)
         if (key !== methodName) {
-            code.insertNewLine(key + ' = -> ' + value.replace(/(?:\r\n|\r|\n)/g, ';'))
+            code.insertNewLine(key + ' = -> ' + script.replace(/(?:\r\n|\r|\n)/g, ';'))
         } else {
-            let methodLines = value.split(/(?:\r\n|\r|\n)/g)
+            let methodLines = script.split(/(?:\r\n|\r|\n)/g)
             if (lineNumber === methodLines.length - 1) {
                 runComplete = true
             }

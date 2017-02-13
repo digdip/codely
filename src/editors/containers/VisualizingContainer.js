@@ -45,19 +45,18 @@ class VisualizingContainer extends Component {
     }
 
     onKeyDown (e) {
-        let entity = this.props.entities.get(this.props.selectedEntityId)
         if (e.keyCode === 37) {
             e.preventDefault()
-            this.props.actions.runMethod(entity, grammar.ON_KEY_LEFT)
+            this.props.actions.runMethod(this.props.selectedEntityId, grammar.ON_KEY_LEFT)
         } else if (e.keyCode === 38) {
             e.preventDefault()
-            this.props.actions.runMethod(entity, grammar.ON_KEY_UP)
+            this.props.actions.runMethod(this.props.selectedEntityId, grammar.ON_KEY_UP)
         } else if (e.keyCode === 39) {
             e.preventDefault()
-            this.props.actions.runMethod(entity, grammar.ON_KEY_RIGHT)
+            this.props.actions.runMethod(this.props.selectedEntityId, grammar.ON_KEY_RIGHT)
         } else if (e.keyCode === 40) {
             e.preventDefault()
-            this.props.actions.runMethod(entity, grammar.ON_KEY_DOWN)
+            this.props.actions.runMethod(this.props.selectedEntityId, grammar.ON_KEY_DOWN)
         }
     }
 
@@ -92,6 +91,7 @@ class VisualizingContainer extends Component {
 
 function select(state) {
     return {
+        selectedEntityId: state.editorsReducer.get(grammar.SELECTED_ENTITY_ID),
         entities: state.editorsReducer.get(grammar.ENTITIES),
         demos   : state.editorsReducer.get(grammar.DEMOS)
     }
