@@ -50,12 +50,13 @@ class MethodsList extends Component {
 
     render () {
         if (this.props.data) {
-            let methods = this.props.data.get('methods')
+            let methods = this.props.data.get(grammar.METHODS)
             let tableModel = []
-            methods.map ((methodCode, methodName) =>
+            methods.map ((methodBody, methodName) =>
                 tableModel.push({
                     id: methodName,
                     text : methodName,
+                    readOnly: methodBody.get(grammar.IS_METHOD_PRE_DEFINED),
                     isSelected : this.props.data.get(grammar.SELECTED_METHOD) === methodName
                 })
             )

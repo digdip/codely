@@ -13,8 +13,11 @@ export default class ListItem extends Component {
 
     render() {
         let className = this.props.isSelected ? 'listItem-selected' : 'listItem'
+        let style = {
+            fontStyle: this.props.readOnly ? 'italic' : 'normal'
+        }
         return (
-            <li className={className} onClick={this.onClick}>{this.props.text}</li>
+            <li className={className} style={style} onClick={this.onClick}>{this.props.text}</li>
         )
     }
 }

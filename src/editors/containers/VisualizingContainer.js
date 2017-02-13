@@ -14,6 +14,7 @@ class VisualizingContainer extends Component {
         this.playDemo = this.playDemo.bind(this)
         this.resetDemo = this.resetDemo.bind(this)
         this.pauseDemo = this.pauseDemo.bind(this)
+        this.onKeyDown = this.onKeyDown.bind(this)
     }
 
     componentDidMount() {
@@ -22,9 +23,12 @@ class VisualizingContainer extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.demos.getIn(['1', grammar.RUN_DATA, grammar.RUN_STATUS]) === grammar.RunStatuses.RUNNING) {
+            window.addEventListener('keydown', this.onKeyDown)
             let runNextDemoLine = this.props.actions.runNextDemoLine
             setTimeout(function () {
                 runNextDemoLine('1')}, 1100)
+        } else {
+            window.removeEventListener('keydown', this.onKeyDown)
         }
     }
 
@@ -38,6 +42,23 @@ class VisualizingContainer extends Component {
 
     pauseDemo() {
         this.props.actions.pauseDemo('1')
+    }
+
+    onKeyDown (e) {
+        let entity = this.props.entities.get(this.props.selectedEntityId)
+        if (e.keyCode === 37) {
+            e.preventDefault()
+            this.props.actions.runMethod(entity, grammar.ON_KEY_LEFT)
+        } else if (e.keyCode === 38) {
+            e.preventDefault()
+            this.props.actions.runMethod(entity, grammar.ON_KEY_UP)
+        } else if (e.keyCode === 39) {
+            e.preventDefault()
+            this.props.actions.runMethod(entity, grammar.ON_KEY_RIGHT)
+        } else if (e.keyCode === 40) {
+            e.preventDefault()
+            this.props.actions.runMethod(entity, grammar.ON_KEY_DOWN)
+        }
     }
 
     render() {

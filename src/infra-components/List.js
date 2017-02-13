@@ -20,6 +20,7 @@ export default class List extends Component {
                         key={listItem.id}
                         text={listItem.text}
                         isSelected={listItem.isSelected}
+                        readOnly={listItem.readOnly}
                         onClick={this.onItemClicked}
                     />
                 )}

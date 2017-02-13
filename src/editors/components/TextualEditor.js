@@ -74,7 +74,7 @@ const TextualEditor = React.createClass({
             height = undefined
         }
 
-        let selectedMethodBody = this.props.data ? this.props.data.getIn([grammar.METHODS, this.props.data.get(grammar.SELECTED_METHOD)]) : ''
+        let selectedMethodBody = this.props.data ? this.props.data.getIn([grammar.METHODS, this.props.data.get(grammar.SELECTED_METHOD), grammar.METHOD_SCRIPT]) : ''
 
         return (
             <div className='codeTextEditorContainer'>

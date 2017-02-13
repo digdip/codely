@@ -35,7 +35,7 @@ export default function editorsReducer(state = initialState, action = undefined)
         case types.SAVE_ENTITY:
             return state
         case types.ADD_NEW_METHOD:
-            state = state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName], '')
+            state = state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName], Immutable.fromJS(createMethod()))
             return state.setIn([grammar.ENTITIES, action.entityId, grammar.SELECTED_METHOD], action.methodName)
         case types.SELECT_METHOD:
             return state.setIn([grammar.ENTITIES, action.entityId, grammar.SELECTED_METHOD], action.methodName)
@@ -161,6 +161,13 @@ function createEntity(entityType, runMethodScript) {
     }
 }
 
+function createMethod(isPreDefined = false, script = '') {
+    let json = {}
+    json[grammar.METHOD_SCRIPT] = script
+    json[grammar.IS_METHOD_PRE_DEFINED] = isPreDefined
+    return json
+}
+
 function createSquare(runMethodScript) {
     let json = {
         id: counter,
@@ -168,6 +175,7 @@ function createSquare(runMethodScript) {
         entityType: entityTypes.SQUARE,
         properties: {},
         methods: {},
+        eventHandlers: {},
         selectedMethod: grammar.MAIN_METHOD
     }
     json[grammar.RUN_DATA] = {
@@ -175,7 +183,11 @@ function createSquare(runMethodScript) {
         methodName: '',
         runStatus: grammar.RunStatuses.IDLE
     }
-    json[grammar.METHODS][grammar.MAIN_METHOD] = runMethodScript ? runMethodScript : ''
+    json[grammar.METHODS][grammar.MAIN_METHOD] = createMethod(true, runMethodScript ? runMethodScript : '')
+    json[grammar.METHODS][grammar.ON_KEY_UP] = createMethod(true)
+    json[grammar.METHODS][grammar.ON_KEY_DOWN] = createMethod(true)
+    json[grammar.METHODS][grammar.ON_KEY_LEFT] = createMethod(true)
+    json[grammar.METHODS][grammar.ON_KEY_RIGHT] = createMethod(true)
     json[grammar.PROPERTIES][grammar.X] = DEFAULT_X_POSITION
     json[grammar.PROPERTIES][grammar.Y] = DEFAULT_Y_POSITION
     json[grammar.PROPERTIES][grammar.WIDTH] = DEFAULT_WIDTH
