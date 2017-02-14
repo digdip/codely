@@ -1,7 +1,7 @@
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 import makeRootReducer from './reducers'
-import { updateLocation } from './location'
+import Immutable from 'immutable'
 
 export default (initialState = {}) => {
   // ======================================================
@@ -23,18 +23,26 @@ export default (initialState = {}) => {
     }
   }
 
+  //read state from localStorage
+  const persistedState = localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : initialState
+
+  persistedState.editorsReducer = Immutable.fromJS(persistedState.editorsReducer)
   // ======================================================
   // Store Instantiation and HMR Setup
   // ======================================================
   const store = createStore(
     makeRootReducer(),
-    initialState,
+      persistedState,
     composeEnhancers(
       applyMiddleware(...middleware),
       ...enhancers
     )
   )
   store.asyncReducers = {}
+
+  store.subscribe(()=>{
+    localStorage.setItem('reduxState', JSON.stringify(store.getState()))
+  })
 
   if (module.hot) {
     module.hot.accept('./reducers', () => {

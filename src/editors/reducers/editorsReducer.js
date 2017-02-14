@@ -3,7 +3,7 @@ import * as entityTypes from  '../../const/entityTypes'
 import * as grammar from  '../../const/grammar'
 import Immutable from 'immutable'
 import CoffeeScript from 'coffee-script'
-
+import uuid from 'uuid'
 const DEFAULT_X_POSITION = 4
 const DEFAULT_Y_POSITION = 5
 const DEFAULT_WIDTH = 2
@@ -170,9 +170,10 @@ function createMethod(isPreDefined = false, script = '') {
 }
 
 function createSquare(runMethodScript) {
+    let id = uuid()
     let json = {
-        id: counter,
-        key: counter++,
+        id: id,
+        key: id,
         entityType: entityTypes.SQUARE,
         properties: {},
         methods: {},

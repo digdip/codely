@@ -15,9 +15,10 @@ class VisualizingContainer extends Component {
         this.resetDemo = this.resetDemo.bind(this)
         this.pauseDemo = this.pauseDemo.bind(this)
         this.onKeyDown = this.onKeyDown.bind(this)
+        this.addEntity = this.addEntity.bind(this)
     }
 
-    componentDidMount() {
+    addEntity() {
         this.props.actions.addNewEntity(entityTypes.SQUARE)
     }
 
@@ -65,6 +66,10 @@ class VisualizingContainer extends Component {
 
             <div className='visualContainer'>
                 <div className='toolbar'>
+                    <Button style={{minWidth: '0', width: '90px', height: '30px', padding: '2px', lineHeight: '0'}}
+                            onClick={this.addEntity}>
+                        Add Entity
+                    </Button>
                     <Button style={{minWidth: '0', width: '90px', height: '30px', padding: '2px', lineHeight: '0'}}
                             onClick={this.playDemo}>
                         Play Demo
