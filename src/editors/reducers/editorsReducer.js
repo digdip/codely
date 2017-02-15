@@ -1,5 +1,5 @@
 import * as types from '../../const/actionTypes'
-import * as entityTypes from  '../../const/entityTypes'
+import * as appConstants from  '../../const/appConstants'
 import * as grammar from  '../../const/grammar'
 import Immutable from 'immutable'
 import CoffeeScript from 'coffee-script'
@@ -10,19 +10,18 @@ const DEFAULT_WIDTH = 2
 const DEFAULT_HEIGHT = 2
 const DEFAULT_COLOR = 'red'
 
-let counter = 0
-
 const initialState = Immutable.fromJS({
     entities: {},
     selectedEntityId: null,
     demos: {
         '1': createDemo1()
-    }
+    },
+    appMode: appConstants.AppMode.EDITING
 })
 
 function createDemo1() {
     let script = 'Left += 10\nWidth += 3\nLeft += 10\nWidth += 3\nTop +=3\nHeight +=2\nTop +=3\nHeight +=2'
-    return createEntity(entityTypes.SQUARE, script)
+    return createEntity(appConstants.EntityType.SQUARE, script)
 }
 
 export default function editorsReducer(state = initialState, action = undefined) {
@@ -70,6 +69,10 @@ export default function editorsReducer(state = initialState, action = undefined)
         case types.PAUSE_ENTITY:
             state = state.setIn([grammar.ENTITIES, action.entityId], pauseRun(state.getIn([grammar.ENTITIES, action.entityId])))
             return state.setIn([grammar.DEMOS, '1'], pauseRun(state.getIn([grammar.DEMOS, '1'])))
+        case types.ENTER_GAME_MODE:
+            return state.set(grammar.APP_MODE, appConstants.AppMode.GAME)
+        case types.ENTER_EDITING_MODE:
+            return state.set(grammar.APP_MODE, appConstants.AppMode.EDITING)
         default:
             return state
     }
@@ -155,7 +158,7 @@ function runMethodNextLine(entity) {
 
 function createEntity(entityType, runMethodScript) {
     switch (entityType) {
-        case entityTypes.SQUARE:
+        case appConstants.EntityType.SQUARE:
             return createSquare(runMethodScript)
         default:
             return {}
@@ -174,7 +177,7 @@ function createSquare(runMethodScript) {
     let json = {
         id: id,
         key: id,
-        entityType: entityTypes.SQUARE,
+        entityType: appConstants.EntityType.SQUARE,
         properties: {},
         methods: {},
         eventHandlers: {},

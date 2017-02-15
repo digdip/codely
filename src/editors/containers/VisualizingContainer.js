@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import {Button} from 'react-mdl'
 import VisualEntity from '../components/VisualEntity'
 import * as editorsActions from '../actions/editorsActions'
-import * as entityTypes from '../../const/entityTypes'
+import * as appConstants from '../../const/appConstants'
 import * as grammar from  '../../const/grammar'
 
 class VisualizingContainer extends Component {
@@ -16,14 +16,15 @@ class VisualizingContainer extends Component {
         this.pauseDemo = this.pauseDemo.bind(this)
         this.onKeyDown = this.onKeyDown.bind(this)
         this.addEntity = this.addEntity.bind(this)
+        this.changeAppMode = this.changeAppMode.bind(this)
     }
 
     addEntity() {
-        this.props.actions.addNewEntity(entityTypes.SQUARE)
+        this.props.actions.addNewEntity(appConstants.EntityType.SQUARE)
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.demos.getIn(['1', grammar.RUN_DATA, grammar.RUN_STATUS]) === grammar.RunStatuses.RUNNING) {
+        if (this.props.appMode === appConstants.AppMode.GAME) {
             window.addEventListener('keydown', this.onKeyDown)
             let runNextDemoLine = this.props.actions.runNextDemoLine
             setTimeout(function () {
@@ -45,6 +46,10 @@ class VisualizingContainer extends Component {
         this.props.actions.pauseDemo('1')
     }
 
+    changeAppMode() {
+        this.props.appMode === appConstants.AppMode.EDITING ? this.props.actions.enterGameMode() : this.props.actions.enterEditingMode()
+    }
+
     onKeyDown (e) {
         if (e.keyCode === 37) {
             e.preventDefault()
@@ -62,6 +67,7 @@ class VisualizingContainer extends Component {
     }
 
     render() {
+
         return (
 
             <div className='visualContainer'>
@@ -82,7 +88,11 @@ class VisualizingContainer extends Component {
                             onClick={this.pauseDemo}>
                         Pause
                     </Button>
-                </div>
+                    <Button style={{minWidth: '0', width: '120px', height: '30px', padding: '2px', lineHeight: '0'}}
+                            onClick={this.changeAppMode}>
+                        { this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Start Editing'}
+                    </Button>
+               </div>
                 <div>
                     {this.props.entities.map((entity) =>
                         <VisualEntity data={entity.get(grammar.PROPERTIES)}/>
@@ -98,7 +108,8 @@ function select(state) {
     return {
         selectedEntityId: state.editorsReducer.get(grammar.SELECTED_ENTITY_ID),
         entities: state.editorsReducer.get(grammar.ENTITIES),
-        demos   : state.editorsReducer.get(grammar.DEMOS)
+        demos   : state.editorsReducer.get(grammar.DEMOS),
+        appMode   : state.editorsReducer.get(grammar.APP_MODE)
     }
 }
 

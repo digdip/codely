@@ -1,5 +1,4 @@
 import * as types from '../../const/actionTypes'
-import * as entityTypes from '../../const/entityTypes'
 
 export function addNewEntity(entityType) {
     return {
@@ -104,5 +103,17 @@ export function pauseEntity(entityId) {
     return {
         type: types.PAUSE_ENTITY,
         entityId
+    }
+}
+
+export function enterGameMode() {
+    return {
+        type: types.ENTER_GAME_MODE
+    }
+}
+
+export function enterEditingMode() {
+    return {
+        type: types.ENTER_EDITING_MODE
     }
 }
