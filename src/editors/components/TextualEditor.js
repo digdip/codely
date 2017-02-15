@@ -3,7 +3,7 @@ import AceEditor from 'react-ace'
 import 'brace/mode/coffee'
 import 'brace/theme/textmate'
 import 'brace/ext/language_tools'
-import {Button, Icon} from 'react-mdl'
+import Button from '../../infra-components/Button'
 import * as grammar from  '../../const/grammar'
 
 /*
@@ -79,18 +79,9 @@ const TextualEditor = React.createClass({
         return (
             <div className='codeTextEditorContainer'>
                 <div className='toolbar'>
-                    <Button style={{minWidth: '0', width: '50px', height: '30px', padding: '2px', lineHeight: '0'}}
-                            onClick={this.runCode}>
-                        Run
-                    </Button>
-                    <Button style={{minWidth: '0', width: '60px', height: '30px', padding: '2px', lineHeight: '0'}}
-                            onClick={this.resetPosition}>
-                        Reset
-                    </Button>
-                    <Button style={{minWidth: '0', width: '60px', height: '30px', padding: '2px', lineHeight: '0'}}
-                            onClick={this.pauseEntity}>
-                        Pause
-                    </Button>
+                    <Button onClick={this.runCode} icon='glyphicon-play'/>
+                    <Button onClick={this.resetPosition} icon='glyphicon-refresh'/>
+                    <Button onClick={this.pauseEntity} icon='glyphicon-pause'/>
                 </div>
                 <AceEditor
                     ref="editor"

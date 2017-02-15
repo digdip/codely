@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
-import {Button, Icon, Dialog, DialogTitle, DialogContent, DialogActions, Textfield} from 'react-mdl'
+import {Dialog, DialogTitle, DialogContent, DialogActions, Textfield} from 'react-mdl'
+import Button from '../../infra-components/Button'
 import List from '../../infra-components/List'
 import * as grammar from  '../../const/grammar'
 
@@ -65,10 +66,7 @@ class MethodsList extends Component {
                 <div className='codeDefinitionContainer'>
                     <div className='header'>Methods</div>
                     <div className='toolbar'>
-                        <Button style={{minWidth: '0', width: '30px', height: '30px', padding: '0', lineHeight: '0'}}
-                                onClick={this.openDialog}>
-                            <Icon name="add" style={{fontSize: '18px'}}/>
-                        </Button>
+                        <Button onClick={this.openDialog} icon='glyphicon-plus'/>
                     </div>
                     <List listItems={tableModel}
                           onItemClicked={this.selectMethod}/>
@@ -82,8 +80,8 @@ class MethodsList extends Component {
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button type='button' onClick={this.addNewMethod}>OK</Button>
-                            <Button type='button' onClick={this.closeDialog}>Cancel</Button>
+                            <Button type='button' onClick={this.addNewMethod} text='OK'></Button>
+                            <Button type='button' onClick={this.closeDialog} text='Cancel'></Button>
                         </DialogActions>
                     </Dialog>
                 </div>

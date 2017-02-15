@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {Button} from 'react-mdl'
+import Button from '../../infra-components/Button'
 import VisualEntity from '../components/VisualEntity'
 import * as editorsActions from '../actions/editorsActions'
 import * as appConstants from '../../const/appConstants'
@@ -72,26 +72,11 @@ class VisualizingContainer extends Component {
 
             <div className='visualContainer'>
                 <div className='toolbar'>
-                    <Button style={{minWidth: '0', width: '90px', height: '30px', padding: '2px', lineHeight: '0'}}
-                            onClick={this.addEntity}>
-                        Add Entity
-                    </Button>
-                    <Button style={{minWidth: '0', width: '90px', height: '30px', padding: '2px', lineHeight: '0'}}
-                            onClick={this.playDemo}>
-                        Play Demo
-                    </Button>
-                    <Button style={{minWidth: '0', width: '100px', height: '30px', padding: '2px', lineHeight: '0'}}
-                            onClick={this.resetDemo}>
-                        Reset Demo
-                    </Button>
-                    <Button style={{minWidth: '0', width: '60px', height: '30px', padding: '2px', lineHeight: '0'}}
-                            onClick={this.pauseDemo}>
-                        Pause
-                    </Button>
-                    <Button style={{minWidth: '0', width: '120px', height: '30px', padding: '2px', lineHeight: '0'}}
-                            onClick={this.changeAppMode}>
-                        { this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Start Editing'}
-                    </Button>
+                    <Button onClick={this.addEntity} icon='glyphicon-plus'/>
+                    <Button onClick={this.playDemo} icon='glyphicon-play'/>
+                    <Button onClick={this.resetDemo} icon='glyphicon-refresh'/>
+                    <Button onClick={this.pauseDemo} icon='glyphicon-pause'/>
+                    <Button onClick={this.changeAppMode} icon='glyphicon-film' text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Start Editing'}/>
                </div>
                 <div>
                     {this.props.entities.map((entity) =>

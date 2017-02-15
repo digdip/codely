@@ -3,8 +3,6 @@ import { Provider } from 'react-redux'
 import VisualizingContainer from '../editors/containers/VisualizingContainer'
 import CodingContainer from '../editors/containers/CodingContainer'
 import '../styles/main.scss'
-import 'react-mdl/extra/material.css'
-import 'react-mdl/extra/material.js'
 
 class AppContainer extends Component {
   static propTypes = {
