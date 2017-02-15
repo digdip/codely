@@ -67,16 +67,16 @@ class VisualizingContainer extends Component {
     }
 
     render() {
-
+        let theStyle = {backgroundColor : this.props.appMode === appConstants.AppMode.EDITING ? 'white' : '#d1d6d8'}
         return (
 
-            <div className='visualContainer'>
+            <div className='visualContainer' style={theStyle}>
                 <div className='toolbar'>
                     <Button onClick={this.addEntity} icon='glyphicon-plus'/>
                     <Button onClick={this.playDemo} icon='glyphicon-play'/>
                     <Button onClick={this.resetDemo} icon='glyphicon-refresh'/>
                     <Button onClick={this.pauseDemo} icon='glyphicon-pause'/>
-                    <Button onClick={this.changeAppMode} icon='glyphicon-film' text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Start Editing'}/>
+                    <Button onClick={this.changeAppMode} icon='glyphicon-film' text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Stop Game'}/>
                </div>
                 <div>
                     {this.props.entities.map((entity) =>
