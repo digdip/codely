@@ -15,7 +15,7 @@ export default class Button extends Component {
         
         return (
             <button onClick={this.onClick}>
-                <i className={'glyphicon ' + this.props.icon}></i>
+                <i className={'glyphicon ' + this.props.icon} style={{marginRight : this.props.text ? 5 : 0}}></i>
                 {this.props.text}
             </button>
         )
