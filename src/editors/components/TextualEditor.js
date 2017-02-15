@@ -109,7 +109,9 @@ const TextualEditor = React.createClass({
                     onBlur={this.props.onBlur}
                     height={height}
                     width={this.props.width}
-                    fontSize={this.props.fontSize}/>
+                    fontSize={this.props.fontSize}
+                    mode='coffee'
+                />
             </div>
         )
     }
