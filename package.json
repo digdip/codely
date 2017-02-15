@@ -41,7 +41,7 @@
       }
     },
     "start": {
-      "command": "node bin/dev-server",
+      "command": "node bin/compile && node bin/dev-server",
       "env": {
         "DEBUG": "app:*"
       }
