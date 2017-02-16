@@ -10,14 +10,17 @@ const DEFAULT_WIDTH = 2
 const DEFAULT_HEIGHT = 2
 const DEFAULT_COLOR = 'red'
 
-const initialState = Immutable.fromJS({
-    entities: {},
-    selectedEntityId: null,
+const TEMP_ENTITY_ID = '1'
+
+let squareEntity = createSquare('', TEMP_ENTITY_ID)
+var model = {
+    entities: {'1': squareEntity},
     demos: {
         '1': createDemo1()
-    },
-    appMode: appConstants.AppMode.EDITING
-})
+    }
+}
+
+const initialState = Immutable.fromJS(model)
 
 function createDemo1() {
     let script = 'Left += 10\nWidth += 3\nLeft += 10\nWidth += 3\nTop +=3\nHeight +=2\nTop +=3\nHeight +=2'
@@ -27,34 +30,28 @@ function createDemo1() {
 export default function editorsReducer(state = initialState, action = undefined) {
 
     switch (action.type) {
-        case types.ADD_NEW_ENTITY:
-            let newEntity = createEntity(action.entityType)
-            state = state.setIn([grammar.ENTITIES, newEntity.get(grammar.ID)], newEntity)
-            return state.set(grammar.SELECTED_ENTITY_ID, newEntity.get(grammar.ID))
-        case types.SAVE_ENTITY:
-            return state
         case types.ADD_NEW_METHOD:
-            state = state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName], Immutable.fromJS(createMethod()))
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.SELECTED_METHOD], action.methodName)
+            state = state.setIn([grammar.ENTITIES, TEMP_ENTITY_ID, grammar.METHODS, action.methodName], Immutable.fromJS(createMethod()))
+            return state.setIn([grammar.ENTITIES, TEMP_ENTITY_ID, grammar.SELECTED_METHOD], action.methodName)
         case types.SELECT_METHOD:
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.SELECTED_METHOD], action.methodName)
+            return state.setIn([grammar.ENTITIES, TEMP_ENTITY_ID, grammar.SELECTED_METHOD], action.methodName)
         case types.UPDATE_METHOD_BODY:
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], action.methodBody)
+            return state.setIn([grammar.ENTITIES, TEMP_ENTITY_ID, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], action.methodBody)
         case types.INSERT_TEXT_TO_METHOD:
-            let currentBody = state.getIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT])
+            let currentBody = state.getIn([grammar.ENTITIES, TEMP_ENTITY_ID, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT])
             if (currentBody && !currentBody.endsWith(' ')) {
                 currentBody += ' '
             }
             currentBody += action.text + ' '
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], currentBody)
+            return state.setIn([grammar.ENTITIES, TEMP_ENTITY_ID, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], currentBody)
         case types.RUN_METHOD:
             if(action.methodName === grammar.MAIN_METHOD) {
                 //play the demo also (hard coded 1 as the demo for now
                 state = state.setIn([grammar.DEMOS, '1'], runMethod(state.getIn([grammar.DEMOS, '1']), grammar.MAIN_METHOD))
             }
-            return state.setIn([grammar.ENTITIES, action.entityId], runMethod(state.getIn([grammar.ENTITIES, action.entityId]), action.methodName))
+            return state.setIn([grammar.ENTITIES, TEMP_ENTITY_ID], runMethod(state.getIn([grammar.ENTITIES, TEMP_ENTITY_ID]), action.methodName))
         case types.RUN_NEXT_LINE:
-            return state.setIn([grammar.ENTITIES, action.entityId], runMethodNextLine(state.getIn([grammar.ENTITIES, action.entityId])))
+            return state.setIn([grammar.ENTITIES, TEMP_ENTITY_ID], runMethodNextLine(state.getIn([grammar.ENTITIES, TEMP_ENTITY_ID])))
         case types.RUN_NEXT_DEMO_LINE:
             return state.setIn([grammar.DEMOS, action.demoId], runMethodNextLine(state.getIn([grammar.DEMOS, action.demoId])))
         case types.PLAY_DEMO:
@@ -62,17 +59,13 @@ export default function editorsReducer(state = initialState, action = undefined)
         case types.RESET_DEMO:
             return state.setIn([grammar.DEMOS, action.demoId], resetRun(state.getIn([grammar.DEMOS, action.demoId])))
         case types.RESET_ENTITY:
-            state = state.setIn([grammar.ENTITIES, action.entityId], resetRun(state.getIn([grammar.ENTITIES, action.entityId])))
+            state = state.setIn([grammar.ENTITIES, TEMP_ENTITY_ID], resetRun(state.getIn([grammar.ENTITIES, TEMP_ENTITY_ID])))
             return state.setIn([grammar.DEMOS, '1'], resetRun(state.getIn([grammar.DEMOS, '1'])))
         case types.PAUSE_DEMO:
             return state.setIn([grammar.DEMOS, '1'], pauseRun(state.getIn([grammar.DEMOS, '1'])))
         case types.PAUSE_ENTITY:
-            state = state.setIn([grammar.ENTITIES, action.entityId], pauseRun(state.getIn([grammar.ENTITIES, action.entityId])))
+            state = state.setIn([grammar.ENTITIES, TEMP_ENTITY_ID], pauseRun(state.getIn([grammar.ENTITIES, TEMP_ENTITY_ID])))
             return state.setIn([grammar.DEMOS, '1'], pauseRun(state.getIn([grammar.DEMOS, '1'])))
-        case types.ENTER_GAME_MODE:
-            return state.set(grammar.APP_MODE, appConstants.AppMode.GAME)
-        case types.ENTER_EDITING_MODE:
-            return state.set(grammar.APP_MODE, appConstants.AppMode.EDITING)
         default:
             return state
     }
@@ -159,7 +152,8 @@ function runMethodNextLine(entity) {
 function createEntity(entityType, runMethodScript) {
     switch (entityType) {
         case appConstants.EntityType.SQUARE:
-            return createSquare(runMethodScript)
+            let id = uuid()
+            return Immutable.fromJS(createSquare(runMethodScript, id))
         default:
             return {}
     }
@@ -172,8 +166,7 @@ function createMethod(isPreDefined = false, script = '') {
     return json
 }
 
-function createSquare(runMethodScript) {
-    let id = uuid()
+function createSquare(runMethodScript, id) {
     let json = {
         id: id,
         key: id,
@@ -198,7 +191,7 @@ function createSquare(runMethodScript) {
     json[grammar.PROPERTIES][grammar.WIDTH] = DEFAULT_WIDTH
     json[grammar.PROPERTIES][grammar.HEIGHT] = DEFAULT_HEIGHT
 
-    return Immutable.fromJS(json)
+    return json
 }
 
 function resetEntityProps(entity) {

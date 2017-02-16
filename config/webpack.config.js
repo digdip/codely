@@ -63,7 +63,7 @@ webpackConfig.plugins = [
   new webpack.DefinePlugin(project.globals),
   new HtmlWebpackPlugin({
     template : project.paths.client('index.html'),
-    chunks: ['app'],
+    chunks: ['intro'],
     hash     : false,
     favicon  : project.paths.public('favicon.ico'),
     filename : 'index.html',

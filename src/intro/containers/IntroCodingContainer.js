@@ -46,7 +46,7 @@ class CodingContainer extends Component {
 function select(state) {
     return {
         entities: state.introReducer.get(grammar.ENTITIES),
-        selectedEntityId: state.introReducer.get(grammar.SELECTED_ENTITY_ID)
+        selectedEntityId: '1'
     }
 }
 
