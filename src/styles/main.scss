@@ -113,10 +113,18 @@ button:hover{
     height: 10em;
     position: relative
   }
-  .centered{
+  .link1{
     margin: 0;
     position: absolute;
-    top: 50%;
+    top: 40px;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+  }
+  .link2{
+    margin: 0;
+    position: absolute;
+    top: 70px;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%)
