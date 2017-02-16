@@ -13,16 +13,8 @@ const DEFAULT_COLOR = 'red'
 const initialState = Immutable.fromJS({
     entities: {},
     selectedEntityId: null,
-    demos: {
-        '1': createDemo1()
-    },
     appMode: appConstants.AppMode.EDITING
 })
-
-function createDemo1() {
-    let script = 'Left += 10\nWidth += 3\nLeft += 10\nWidth += 3\nTop +=3\nHeight +=2\nTop +=3\nHeight +=2'
-    return createEntity(appConstants.EntityType.SQUARE, script)
-}
 
 export default function editorsReducer(state = initialState, action = undefined) {
 
@@ -31,8 +23,6 @@ export default function editorsReducer(state = initialState, action = undefined)
             let newEntity = createEntity(action.entityType)
             state = state.setIn([grammar.ENTITIES, newEntity.get(grammar.ID)], newEntity)
             return state.set(grammar.SELECTED_ENTITY_ID, newEntity.get(grammar.ID))
-        case types.SAVE_ENTITY:
-            return state
         case types.ADD_NEW_METHOD:
             state = state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName], Immutable.fromJS(createMethod()))
             return state.setIn([grammar.ENTITIES, action.entityId, grammar.SELECTED_METHOD], action.methodName)
@@ -48,27 +38,9 @@ export default function editorsReducer(state = initialState, action = undefined)
             currentBody += action.text + ' '
             return state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], currentBody)
         case types.RUN_METHOD:
-            if(action.methodName === grammar.MAIN_METHOD) {
-                //play the demo also (hard coded 1 as the demo for now
-                state = state.setIn([grammar.DEMOS, '1'], runMethod(state.getIn([grammar.DEMOS, '1']), grammar.MAIN_METHOD))
-            }
             return state.setIn([grammar.ENTITIES, action.entityId], runMethod(state.getIn([grammar.ENTITIES, action.entityId]), action.methodName))
         case types.RUN_NEXT_LINE:
             return state.setIn([grammar.ENTITIES, action.entityId], runMethodNextLine(state.getIn([grammar.ENTITIES, action.entityId])))
-        case types.RUN_NEXT_DEMO_LINE:
-            return state.setIn([grammar.DEMOS, action.demoId], runMethodNextLine(state.getIn([grammar.DEMOS, action.demoId])))
-        case types.PLAY_DEMO:
-            return state.setIn([grammar.DEMOS, action.demoId], runMethod(state.getIn([grammar.DEMOS, action.demoId]), grammar.MAIN_METHOD))
-        case types.RESET_DEMO:
-            return state.setIn([grammar.DEMOS, action.demoId], resetRun(state.getIn([grammar.DEMOS, action.demoId])))
-        case types.RESET_ENTITY:
-            state = state.setIn([grammar.ENTITIES, action.entityId], resetRun(state.getIn([grammar.ENTITIES, action.entityId])))
-            return state.setIn([grammar.DEMOS, '1'], resetRun(state.getIn([grammar.DEMOS, '1'])))
-        case types.PAUSE_DEMO:
-            return state.setIn([grammar.DEMOS, '1'], pauseRun(state.getIn([grammar.DEMOS, '1'])))
-        case types.PAUSE_ENTITY:
-            state = state.setIn([grammar.ENTITIES, action.entityId], pauseRun(state.getIn([grammar.ENTITIES, action.entityId])))
-            return state.setIn([grammar.DEMOS, '1'], pauseRun(state.getIn([grammar.DEMOS, '1'])))
         case types.ENTER_GAME_MODE:
             return state.set(grammar.APP_MODE, appConstants.AppMode.GAME)
         case types.ENTER_EDITING_MODE:
