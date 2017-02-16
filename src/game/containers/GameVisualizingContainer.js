@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Button from '../../infra-components/Button'
-import VisualEntity from '../components/VisualEntity'
-import * as editorsActions from '../actions/editorsActions'
+import VisualEntity from '../../common/components/VisualEntity'
+import * as editorsActions from '../actions/gameActions'
 import * as appConstants from '../../const/appConstants'
 import * as grammar from  '../../const/grammar'
 
@@ -24,11 +24,14 @@ class VisualizingContainer extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.appMode === appConstants.AppMode.GAME) {
-            window.addEventListener('keydown', this.onKeyDown)
+        if (this.props.demos.getIn(['1', grammar.RUN_DATA, grammar.RUN_STATUS]) === grammar.RunStatuses.RUNNING) {
             let runNextDemoLine = this.props.actions.runNextDemoLine
             setTimeout(function () {
                 runNextDemoLine('1')}, 1100)
+        }
+
+        if (this.props.appMode === appConstants.AppMode.GAME) {
+            window.addEventListener('keydown', this.onKeyDown)
         } else {
             window.removeEventListener('keydown', this.onKeyDown)
         }

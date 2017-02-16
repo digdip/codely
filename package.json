@@ -9,6 +9,7 @@
     "lint": "eslint bin build config server src tests",
     "lint:fix": "npm run lint -- --fix",
     "start": "better-npm-run start",
+    "dev": "better-npm-run dev",
     "deploy": "better-npm-run deploy",
     "deploy:dev": "better-npm-run deploy:dev",
     "deploy:prod": "better-npm-run deploy:prod"
@@ -42,6 +43,12 @@
     },
     "start": {
       "command": "node bin/compile && node bin/dev-server",
+      "env": {
+        "DEBUG": "app:*"
+      }
+    },
+    "dev": {
+      "command": "node bin/dev-server",
       "env": {
         "DEBUG": "app:*"
       }

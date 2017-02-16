@@ -26,7 +26,7 @@ export default (initialState = {}) => {
   //read state from localStorage
   const persistedState = localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : initialState
 
-  persistedState.editorsReducer = Immutable.fromJS(persistedState.editorsReducer)
+  persistedState.introReducer = Immutable.fromJS(persistedState.introReducer)
   // ======================================================
   // Store Instantiation and HMR Setup
   // ======================================================

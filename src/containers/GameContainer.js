@@ -6,7 +6,7 @@ import '../styles/main.scss'
 import 'react-mdl/extra/material.css'
 import 'react-mdl/extra/material.js'
 
-class AppContainer extends Component {
+class GameContainer extends Component {
   static propTypes = {
     store  : PropTypes.object.isRequired
   }
@@ -25,4 +25,4 @@ class AppContainer extends Component {
   }
 }
 
-export default AppContainer
+export default GameContainer

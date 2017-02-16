@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux'
-import editorsReducer from '../editors/reducers/editorsReducer'
+import editorsReducer from '../reducers/introReducer'
+import commonReducer from '../../common/reducers/commonReducer'
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
     editorsReducer: editorsReducer,
+    commonReducer: commonReducer,
     ...asyncReducers
   })
 }

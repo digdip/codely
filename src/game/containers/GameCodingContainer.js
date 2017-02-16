@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as editorsActions from '../actions/editorsActions'
+import * as editorsActions from '../actions/gameActions'
 import * as grammar from  '../../const/grammar'
 
-import TextualEditor from '../components/TextualEditor'
-import PropertiesList from '../components/PropertiesList'
-import MethodsList from '../components/MethodsList'
+import TextualEditor from '../../common/components/TextualEditor'
+import PropertiesList from '../components/GamePropertiesList'
+import MethodsList from '../../common/components/MethodsList'
 
 class CodingContainer extends Component {
 
