@@ -35,6 +35,7 @@ const webpackConfig = {
 const APP_ENTRY = project.paths.client('main.js')
 
 webpackConfig.entry = {
+  main : ['webpack-hot-middleware/client?reload=true', APP_ENTRY],
   intro : ['webpack-hot-middleware/client?reload=true', APP_ENTRY],
   game : ['webpack-hot-middleware/client?reload=true', 'game.js']
 }
@@ -63,10 +64,21 @@ webpackConfig.plugins = [
   new webpack.DefinePlugin(project.globals),
   new HtmlWebpackPlugin({
     template : project.paths.client('index.html'),
-    chunks: ['intro'],
+    chunks: ['main'],
     hash     : false,
     favicon  : project.paths.public('favicon.ico'),
     filename : 'index.html',
+    inject   : 'body',
+    minify   : {
+      collapseWhitespace : true
+    }
+  }),
+  new HtmlWebpackPlugin({
+    template : project.paths.client('intro.html'),
+    chunks: ['intro'],
+    hash     : false,
+    favicon  : project.paths.public('favicon.ico'),
+    filename : 'intro.html',
     inject   : 'body',
     minify   : {
       collapseWhitespace : true
