@@ -33,10 +33,16 @@ const webpackConfig = {
 // Entry Points
 // ------------------------------------
 const APP_ENTRY = project.paths.client('main.js')
+const GAME_ENTRY = project.paths.client('game.js')
 
 webpackConfig.entry = {
-  intro : ['webpack-hot-middleware/client?path=${project.compiler_public_path}__webpack_hmr', APP_ENTRY],
-  game : ['webpack-hot-middleware/client?path=${project.compiler_public_path}__webpack_hmr', 'game.js']
+  intro : __DEV__
+      ? [APP_ENTRY].concat(`webpack-hot-middleware/client?path=${project.compiler_public_path}__webpack_hmr`)
+      : [APP_ENTRY],
+  game : __DEV__
+      ? [GAME_ENTRY].concat(`webpack-hot-middleware/client?path=${project.compiler_public_path}__webpack_hmr`)
+      : [GAME_ENTRY],
+  vendor : project.compiler_vendors
 }
 
 // ------------------------------------
