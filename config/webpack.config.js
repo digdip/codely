@@ -35,8 +35,8 @@ const webpackConfig = {
 const APP_ENTRY = project.paths.client('main.js')
 
 webpackConfig.entry = {
-  intro : ['webpack-hot-middleware/client?reload=true', APP_ENTRY],
-  game : ['webpack-hot-middleware/client?reload=true', 'game.js']
+  intro : ['webpack-hot-middleware/client?path=${project.compiler_public_path}__webpack_hmr', APP_ENTRY],
+  game : ['webpack-hot-middleware/client?path=${project.compiler_public_path}__webpack_hmr', 'game.js']
 }
 
 // ------------------------------------
