@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
-import editorsReducer from '../editors/reducers/editorsReducer'
+import gameReducer from '../reducers/gameReducer'
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
-    editorsReducer: editorsReducer,
+    gameReducer: gameReducer,
     ...asyncReducers
   })
 }

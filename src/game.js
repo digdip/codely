@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import createStore from './intro/store/createStore'
-import AppContainer from './containers/AppContainer'
+import createStore from './game/store/createStore'
+import GameContainer from './containers/GameContainer'
 
 // ========================================================
 // Store Instantiation
@@ -17,7 +17,7 @@ const MOUNT_NODE = document.getElementById('root')
 let render = () => {
 
   ReactDOM.render(
-    <AppContainer store={store} />,
+    <GameContainer store={store} />,
     MOUNT_NODE
   )
 }

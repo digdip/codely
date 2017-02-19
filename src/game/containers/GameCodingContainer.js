@@ -1,16 +1,15 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as editorsActions from '../actions/editorsActions'
+import * as gameActions from '../actions/gameActions'
+import * as commonActions from '../../common/actions/commonActions'
 import * as grammar from  '../../const/grammar'
 
-import TextualEditor from '../components/TextualEditor'
-import PropertiesList from '../components/PropertiesList'
-import MethodsList from '../components/MethodsList'
+import TextualEditor from '../../common/components/TextualEditor'
+import PropertiesList from '../components/GamePropertiesList'
+import MethodsList from '../../common/components/MethodsList'
 
-class CodingContainer extends Component {
-
-
+class GameCodingContainer extends Component {
 
     constructor(props) {
         super(props)
@@ -45,18 +44,18 @@ class CodingContainer extends Component {
 
 function select(state) {
     return {
-        entities: state.editorsReducer.get(grammar.ENTITIES),
-        selectedEntityId: state.editorsReducer.get(grammar.SELECTED_ENTITY_ID)
+        entities: state.gameReducer.get(grammar.ENTITIES),
+        selectedEntityId: state.gameReducer.get(grammar.SELECTED_ENTITY_ID)
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(Object.assign({}, editorsActions), dispatch)
+        actions: bindActionCreators(Object.assign({}, gameActions, commonActions), dispatch)
     }
 }
 
 export default connect(
     select,
     mapDispatchToProps
-)(CodingContainer)
+)(GameCodingContainer)

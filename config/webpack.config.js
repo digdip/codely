@@ -35,10 +35,8 @@ const webpackConfig = {
 const APP_ENTRY = project.paths.client('main.js')
 
 webpackConfig.entry = {
-  app : __DEV__
-    ? [APP_ENTRY].concat(`webpack-hot-middleware/client?path=${project.compiler_public_path}__webpack_hmr`)
-    : [APP_ENTRY],
-  vendor : project.compiler_vendors
+  intro : ['webpack-hot-middleware/client?reload=true', APP_ENTRY],
+  game : ['webpack-hot-middleware/client?reload=true', 'game.js']
 }
 
 // ------------------------------------
@@ -65,6 +63,7 @@ webpackConfig.plugins = [
   new webpack.DefinePlugin(project.globals),
   new HtmlWebpackPlugin({
     template : project.paths.client('index.html'),
+    chunks: ['main'],
     hash     : false,
     favicon  : project.paths.public('favicon.ico'),
     filename : 'index.html',
@@ -72,7 +71,25 @@ webpackConfig.plugins = [
     minify   : {
       collapseWhitespace : true
     }
-  })
+  }),
+  new HtmlWebpackPlugin({
+    template : project.paths.client('intro.html'),
+    chunks: ['intro'],
+    hash     : false,
+    favicon  : project.paths.public('favicon.ico'),
+    filename : 'intro.html',
+    inject   : 'body',
+    minify   : {
+      collapseWhitespace : true
+    }
+  }),
+  new HtmlWebpackPlugin({
+    chunks: ['game'],
+    inject: 'body',
+    template: project.paths.client('game.html'),
+    filename: 'game.html',
+    favicon  : project.paths.public('favicon.ico')
+  }),
 ]
 
 // Ensure that the compiler exits on errors during testing so that
@@ -110,15 +127,6 @@ if (__DEV__) {
       }
     }),
     new webpack.optimize.AggressiveMergingPlugin()
-  )
-}
-
-// Don't split bundles during testing, since we only want import one bundle
-if (!__TEST__) {
-  webpackConfig.plugins.push(
-    new webpack.optimize.CommonsChunkPlugin({
-      names : ['vendor']
-    })
   )
 }
 
