@@ -1,4 +1,4 @@
-import * as grammar from 'grammar'
+import * as grammar from './grammar'
 
 export const GRID_SIZE_PIXELS = 20
 
