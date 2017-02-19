@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux'
 import Button from '../../infra-components/Button'
 import VisualEntity from '../../common/components/VisualEntity'
 import * as introActions from '../actions/introActions'
-import * as commonActions from '../../common/actions/commonActions'
 import * as appConstants from '../../const/appConstants'
 import * as grammar from  '../../const/grammar'
 
@@ -67,7 +66,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(Object.assign({}, introActions, commonActions), dispatch)
+        actions: bindActionCreators(Object.assign({}, introActions), dispatch)
     }
 }
 

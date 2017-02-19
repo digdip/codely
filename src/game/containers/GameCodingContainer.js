@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as gameActions from '../actions/gameActions'
-import * as commonActions from '../../common/actions/commonActions'
 import * as grammar from  '../../const/grammar'
 
 import TextualEditor from '../../common/components/TextualEditor'
@@ -51,7 +50,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(Object.assign({}, gameActions, commonActions), dispatch)
+        actions: bindActionCreators(Object.assign({}, gameActions), dispatch)
     }
 }
 

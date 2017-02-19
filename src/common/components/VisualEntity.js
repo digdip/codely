@@ -18,7 +18,7 @@ class VisualEntity extends Component {
         let opacity = this.props.isGhost ? '0.3' : '1'
 
         return (
-            <svg className='animate' width={properties[grammar.WIDTH] * appConstants.GRID_SIZE_PIXELS} onclick={this.onClick}
+            <svg className='animate' width={properties[grammar.WIDTH] * appConstants.GRID_SIZE_PIXELS} onClick={this.onClick}
                  height={properties[grammar.HEIGHT] * appConstants.GRID_SIZE_PIXELS}
                  style={{position: "absolute", top: properties[grammar.Y] * appConstants.GRID_SIZE_PIXELS + 'px', left : properties[grammar.X] * appConstants.GRID_SIZE_PIXELS + 'px'}}>
 
