@@ -22,29 +22,30 @@ const initialState = Immutable.fromJS(createInitialModel())
 
 export default function gameReducer(state = initialState, action = undefined) {
 
+    let entityPath = action.entityId === state.getIn([grammar.MAIN_CHARACTER, grammar.ID]) ? grammar.MAIN_CHARACTER : grammar.ENEMY
     switch (action.type) {
         case types.ADD_NEW_METHOD:
-            state = state.setIn([action.selectedEntityRole, grammar.METHODS, action.methodName], Immutable.fromJS(reducerUtils.createMethod()))
-            return state.setIn([action.selectedEntityRole, grammar.SELECTED_METHOD], action.methodName)
+            state = state.setIn([entityPath, grammar.METHODS, action.methodName], Immutable.fromJS(reducerUtils.createMethod()))
+            return state.setIn([entityPath, grammar.SELECTED_METHOD], action.methodName)
         case types.SELECT_METHOD:
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.SELECTED_METHOD], action.methodName)
+            return state.setIn([entityPath, grammar.SELECTED_METHOD], action.methodName)
         case types.UPDATE_METHOD_BODY:
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], action.methodBody)
+            return state.setIn([entityPath, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], action.methodBody)
         case types.INSERT_TEXT_TO_METHOD:
-            let currentBody = state.getIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT])
+            let currentBody = state.getIn([entityPath, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT])
             if (currentBody && !currentBody.endsWith(' ')) {
                 currentBody += ' '
             }
             currentBody += action.text + ' '
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], currentBody)
+            return state.setIn([entityPath, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], currentBody)
         case types.RUN_METHOD:
-            return state.setIn([grammar.ENTITIES, action.entityId], reducerUtils.runMethod(state.getIn([grammar.ENTITIES, action.entityId]), action.methodName))
+            return state.setIn([entityPath], reducerUtils.runMethod(state.getIn([grammar.ENTITIES, action.entityId]), action.methodName))
         case types.RUN_NEXT_LINE:
-            return state.setIn([grammar.ENTITIES, action.entityId], reducerUtils.runMethodNextLine(state.getIn([grammar.ENTITIES, action.entityId])))
+            return state.setIn([entityPath], reducerUtils.runMethodNextLine(state.getIn([grammar.ENTITIES, action.entityId])))
         case types.RESET_ENTITY:
-            return state.setIn([grammar.ENTITIES, action.entityId], reducerUtils.resetRun(state.getIn([grammar.ENTITIES, action.entityId])))
+            return state.setIn([entityPath], reducerUtils.resetRun(state.getIn([grammar.ENTITIES, action.entityId])))
         case types.PAUSE_ENTITY:
-            return state.setIn([grammar.ENTITIES, action.entityId], reducerUtils.pauseRun(state.getIn([grammar.ENTITIES, action.entityId])))
+            return state.setIn([entityPath], reducerUtils.pauseRun(state.getIn([grammar.ENTITIES, action.entityId])))
         case types.ENTER_GAME_MODE:
             return state.set(grammar.APP_MODE, appConstants.AppMode.GAME)
         case types.ENTER_EDITING_MODE:
