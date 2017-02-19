@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as gameActions from '../actions/gameActions'
+import * as appConstants from  '../../const/appConstants'
 import * as grammar from  '../../const/grammar'
 
 import TextualEditor from '../../common/components/TextualEditor'
@@ -16,12 +17,12 @@ class GameCodingContainer extends Component {
     }
 
     onMethodBodyChange(value) {
-        let entity = this.props.entities.get(this.props.selectedEntityId)
+        let entity = this.props.selectedEntityRole === appConstants.EntityRole.MAIN_CHARACTER ? this.props.mainCharacter : this.props.enemy
         this.props.actions.updateMethodBody(entity.get(grammar.ID), entity.get(grammar.SELECTED_METHOD), value)
     }
 
     render () {
-        let entity = this.props.entities.get(this.props.selectedEntityId)
+        let entity = this.props.selectedEntityRole === appConstants.EntityRole.MAIN_CHARACTER ? this.props.mainCharacter : this.props.enemy
         return (
             <div className='codeContainer'>
                 <PropertiesList data={entity} insertTextToMethod={this.props.actions.insertTextToMethod}/>
@@ -43,8 +44,10 @@ class GameCodingContainer extends Component {
 
 function select(state) {
     return {
-        entities: state.gameReducer.get(grammar.ENTITIES),
-        selectedEntityId: state.gameReducer.get(grammar.SELECTED_ENTITY_ID)
+        selectedEntityId: state.gameReducer.get(grammar.SELECTED_ENTITY_ID),
+        mainCharacter: state.gameReducer.get(grammar.MAIN_CHARACTER),
+        enemy   : state.gameReducer.get(grammar.ENEMY),
+        selectedEntityRole: state.gameReducer.get(grammar.SELECTED_ENTITY_ROLE)
     }
 }
 

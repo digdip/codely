@@ -22,7 +22,7 @@ function createDemo1() {
     return createEntity(appConstants.EntityType.SQUARE, script)
 }
 
-export default function editorsReducer(state = initialState, action = undefined) {
+export default function introReducer(state = initialState, action = undefined) {
 
     switch (action.type) {
         case types.ADD_NEW_METHOD:

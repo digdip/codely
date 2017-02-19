@@ -15,17 +15,14 @@ function createInitialModel() {
     }
     model[appConstants.EntityRole.MAIN_CHARACTER] = createSquare()
     model[appConstants.EntityRole.ENEMY] = createSquare(appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3)
+    return model
 }
 const initialState = Immutable.fromJS(createInitialModel())
 
 
-export default function editorsReducer(state = initialState, action = undefined) {
+export default function gameReducer(state = initialState, action = undefined) {
 
     switch (action.type) {
-        case types.ADD_NEW_ENTITY:
-            let newEntity = createEntity(action.entityType)
-            state = state.setIn([grammar.ENTITIES, newEntity.get(grammar.ID)], newEntity)
-            return state.set(grammar.SELECTED_ENTITY_ID, newEntity.get(grammar.ID))
         case types.ADD_NEW_METHOD:
             state = state.setIn([action.selectedEntityRole, grammar.METHODS, action.methodName], Immutable.fromJS(reducerUtils.createMethod()))
             return state.setIn([action.selectedEntityRole, grammar.SELECTED_METHOD], action.methodName)

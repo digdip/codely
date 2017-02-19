@@ -50,26 +50,17 @@ class GameVisualizingContainer extends Component {
 
     render() {
         let theStyle = {backgroundColor : this.props.appMode === appConstants.AppMode.EDITING ? 'white' : '#d1d6d8'}
-        let visContainer
-        if (this.props.entities && this.props.entities.size > 0){
-            visContainer = (
-                <div>
-                    {this.props.entities.map((entity) =>
-                        <VisualEntity data={entity.get(grammar.PROPERTIES)}/>
-                    )}
-                </div>
-            )
-        } else{
-            visContainer = (<div/>)
-        }
+
         return (
 
             <div className='visualContainer' style={theStyle}>
                 <div className='toolbar'>
-                    <Button onClick={this.addEntity} icon='glyphicon-plus'/>
                     <Button onClick={this.changeAppMode} icon='glyphicon-film' text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Stop Game'}/>
                </div>
-                {visContainer}
+                <div>
+                    <VisualEntity data={this.props.mainCharacter.get(grammar.PROPERTIES)}/>
+                    <VisualEntity data={this.props.enemy.get(grammar.PROPERTIES)}/>
+                </div>
             </div>
         )
     }
@@ -78,7 +69,9 @@ class GameVisualizingContainer extends Component {
 function select(state) {
     return {
         selectedEntityId: state.gameReducer.get(grammar.SELECTED_ENTITY_ID),
-        entities: state.gameReducer.get(grammar.ENTITIES),
+        mainCharacter: state.gameReducer.get(grammar.MAIN_CHARACTER),
+        enemy   : state.gameReducer.get(grammar.ENEMY),
+        selectedEntityRole: state.gameReducer.get(grammar.SELECTED_ENTITY_ROLE),
         appMode   : state.gameReducer.get(grammar.APP_MODE)
     }
 }
