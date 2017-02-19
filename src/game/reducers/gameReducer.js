@@ -6,11 +6,18 @@ import Immutable from 'immutable'
 import uuid from 'uuid'
 
 
-const initialState = Immutable.fromJS({
-    entities: {},
-    selectedEntityId: null,
-    appMode: appConstants.AppMode.EDITING
-})
+function createInitialModel() {
+    let model = {
+        mainCharacter: {},
+        enemy: {},
+        selectedEntityRole: appConstants.EntityRole.MAIN_CHARACTER,
+        appMode: appConstants.AppMode.EDITING
+    }
+    model[appConstants.EntityRole.MAIN_CHARACTER] = createSquare()
+    model[appConstants.EntityRole.ENEMY] = createSquare(appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3)
+}
+const initialState = Immutable.fromJS(createInitialModel())
+
 
 export default function editorsReducer(state = initialState, action = undefined) {
 
@@ -20,8 +27,8 @@ export default function editorsReducer(state = initialState, action = undefined)
             state = state.setIn([grammar.ENTITIES, newEntity.get(grammar.ID)], newEntity)
             return state.set(grammar.SELECTED_ENTITY_ID, newEntity.get(grammar.ID))
         case types.ADD_NEW_METHOD:
-            state = state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName], Immutable.fromJS(reducerUtils.createMethod()))
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.SELECTED_METHOD], action.methodName)
+            state = state.setIn([action.selectedEntityRole, grammar.METHODS, action.methodName], Immutable.fromJS(reducerUtils.createMethod()))
+            return state.setIn([action.selectedEntityRole, grammar.SELECTED_METHOD], action.methodName)
         case types.SELECT_METHOD:
             return state.setIn([grammar.ENTITIES, action.entityId, grammar.SELECTED_METHOD], action.methodName)
         case types.UPDATE_METHOD_BODY:
@@ -54,13 +61,13 @@ export default function editorsReducer(state = initialState, action = undefined)
 function createEntity(entityType, runMethodScript) {
     switch (entityType) {
         case appConstants.EntityType.SQUARE:
-            return createSquare(runMethodScript)
+            return createSquare()
         default:
             return {}
     }
 }
 
-function createSquare(runMethodScript) {
+function createSquare(xPos, yPos) {
     let id = uuid()
     let json = {
         id: id,
@@ -81,10 +88,10 @@ function createSquare(runMethodScript) {
     json[grammar.METHODS][grammar.ON_KEY_DOWN] = reducerUtils.createMethod(true)
     json[grammar.METHODS][grammar.ON_KEY_LEFT] = reducerUtils.createMethod(true)
     json[grammar.METHODS][grammar.ON_KEY_RIGHT] = reducerUtils.createMethod(true)
-    json[grammar.PROPERTIES][grammar.X] = appConstants.DEFAULT_X_POSITION
-    json[grammar.PROPERTIES][grammar.Y] = appConstants.DEFAULT_Y_POSITION
+    json[grammar.PROPERTIES][grammar.X] = xPos ? xPos : appConstants.DEFAULT_X_POSITION
+    json[grammar.PROPERTIES][grammar.Y] = yPos ? yPos : appConstants.DEFAULT_Y_POSITION
     json[grammar.PROPERTIES][grammar.WIDTH] = appConstants.DEFAULT_WIDTH
     json[grammar.PROPERTIES][grammar.HEIGHT] = appConstants.DEFAULT_HEIGHT
 
-    return Immutable.fromJS(json)
+    return json
 }
