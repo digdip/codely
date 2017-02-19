@@ -1,11 +1,9 @@
 import { combineReducers } from 'redux'
 import gameReducer from '../reducers/gameReducer'
-import commonReducer from '../../common/reducers/commonReducer'
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
     gameReducer: gameReducer,
-    commonReducer: commonReducer,
     ...asyncReducers
   })
 }

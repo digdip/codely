@@ -24,7 +24,8 @@ export default (initialState = {}) => {
   }
 
   //read state from localStorage
-  const persistedState = localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : initialState
+  const LOCAL_STORAGE_KEY = 'codelyIntroState'
+  const persistedState = localStorage.getItem(LOCAL_STORAGE_KEY) ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) : initialState
 
   persistedState.introReducer = Immutable.fromJS(persistedState.introReducer)
   // ======================================================
@@ -41,7 +42,7 @@ export default (initialState = {}) => {
   store.asyncReducers = {}
 
   store.subscribe(()=>{
-    localStorage.setItem('reduxState', JSON.stringify(store.getState()))
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(store.getState()))
   })
 
   if (module.hot) {
