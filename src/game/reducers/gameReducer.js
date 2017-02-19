@@ -39,13 +39,13 @@ export default function gameReducer(state = initialState, action = undefined) {
             currentBody += action.text + ' '
             return state.setIn([entityPath, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], currentBody)
         case types.RUN_METHOD:
-            return state.setIn([entityPath], reducerUtils.runMethod(state.getIn([grammar.ENTITIES, action.entityId]), action.methodName))
+            return state.set(entityPath, reducerUtils.runMethod(state.get(entityPath), action.methodName))
         case types.RUN_NEXT_LINE:
-            return state.setIn([entityPath], reducerUtils.runMethodNextLine(state.getIn([grammar.ENTITIES, action.entityId])))
+            return state.set(entityPath, reducerUtils.runMethodNextLine(state.get(entityPath)))
         case types.RESET_ENTITY:
-            return state.setIn([entityPath], reducerUtils.resetRun(state.getIn([grammar.ENTITIES, action.entityId])))
+            return state.set(entityPath, reducerUtils.resetRun(state.get(entityPath)))
         case types.PAUSE_ENTITY:
-            return state.setIn([entityPath], reducerUtils.pauseRun(state.getIn([grammar.ENTITIES, action.entityId])))
+            return state.set(entityPath, reducerUtils.pauseRun(state.get(entityPath)))
         case types.ENTER_GAME_MODE:
             return state.set(grammar.APP_MODE, appConstants.AppMode.GAME)
         case types.ENTER_EDITING_MODE:
