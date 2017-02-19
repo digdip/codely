@@ -42,7 +42,7 @@
       }
     },
     "start": {
-      "command": "node bin/compile && node bin/dev-server  --max_old_space_size=512",
+      "command": "node bin/compile && node bin/dev-server  --max_old_space_size=512 --gc_global=true",
       "env": {
         "DEBUG": "app:*"
       }
