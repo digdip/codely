@@ -58,8 +58,8 @@ class GameVisualizingContainer extends Component {
                     <Button onClick={this.changeAppMode} icon='glyphicon-film' text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Stop Game'}/>
                </div>
                 <div>
-                    <VisualEntity data={this.props.mainCharacter.get(grammar.PROPERTIES)}/>
-                    <VisualEntity data={this.props.enemy.get(grammar.PROPERTIES)}/>
+                    <VisualEntity data={this.props.mainCharacter} onClick={this.props.actions.selectEntity}/>
+                    <VisualEntity data={this.props.enemy} onClick={this.props.actions.selectEntity}/>
                 </div>
             </div>
         )

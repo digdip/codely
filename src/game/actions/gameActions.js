@@ -1,5 +1,12 @@
 import * as types from '../../const/actionTypes'
 
+export function selectEntity(entityId) {
+    return {
+        type: types.SELECT_ENTITY,
+        entityId
+    }
+}
+
 export function addNewMethod(entityId, methodName) {
     return {
         type: types.ADD_NEW_METHOD,

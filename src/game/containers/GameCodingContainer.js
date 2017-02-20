@@ -17,20 +17,18 @@ class GameCodingContainer extends Component {
     }
 
     onMethodBodyChange(value) {
-        let entity = this.props.selectedEntityRole === appConstants.EntityRole.MAIN_CHARACTER ? this.props.mainCharacter : this.props.enemy
-        this.props.actions.updateMethodBody(entity.get(grammar.ID), entity.get(grammar.SELECTED_METHOD), value)
+        this.props.actions.updateMethodBody(this.props.entity.get(grammar.ID), this.props.entity.get(grammar.SELECTED_METHOD), value)
     }
 
     render () {
-        let entity = this.props.selectedEntityRole === appConstants.EntityRole.MAIN_CHARACTER ? this.props.mainCharacter : this.props.enemy
         return (
             <div className='codeContainer'>
-                <PropertiesList data={entity} insertTextToMethod={this.props.actions.insertTextToMethod}/>
-                <MethodsList data={entity}
+                <PropertiesList data={this.props.entity} insertTextToMethod={this.props.actions.insertTextToMethod}/>
+                <MethodsList data={this.props.entity}
                              addNewMethod={this.props.actions.addNewMethod}
                              selectMethod={this.props.actions.selectMethod}/>
                 <TextualEditor
-                    data={entity}
+                    data={this.props.entity}
                     onChange={this.onMethodBodyChange}
                     runCode={this.props.actions.runMethod}
                     runNextLine={this.props.actions.runNextLine}
@@ -44,10 +42,7 @@ class GameCodingContainer extends Component {
 
 function select(state) {
     return {
-        selectedEntityId: state.gameReducer.get(grammar.SELECTED_ENTITY_ID),
-        mainCharacter: state.gameReducer.get(grammar.MAIN_CHARACTER),
-        enemy   : state.gameReducer.get(grammar.ENEMY),
-        selectedEntityRole: state.gameReducer.get(grammar.SELECTED_ENTITY_ROLE)
+        entity: state.gameReducer.get(grammar.SELECTED_ENTITY_ROLE) === appConstants.EntityRole.MAIN_CHARACTER ? state.gameReducer.get(grammar.MAIN_CHARACTER) : state.gameReducer.get(grammar.ENEMY)
     }
 }
 
