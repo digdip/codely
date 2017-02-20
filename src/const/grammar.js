@@ -12,13 +12,16 @@ export const ON_KEY_LEFT = 'onLeftArrow'
 export const ON_KEY_RIGHT = 'onRightArrow'
 export const ON_KEY_UP = 'onUpArrow'
 export const ON_KEY_DOWN = 'onDownArrow'
+export const ON_MAIN_CHARACTER_MOVE = 'onMainCharacterMove'
 
 // keywords
 export const ID = 'id'
 export const RUN_DATA = 'runData'
 export const ENTITIES = 'entities'
+export const MAIN_CHARACTER_PROTOTYPE = 'mainCharacterPrototype'
+export const ENEMY_PROTOTYPE = 'enemyPrototype'
 export const MAIN_CHARACTER = 'mainCharacter'
-export const ENEMY = 'enemy'
+export const ENEMIES = 'enemies'
 export const DEMOS = 'demos'
 export const APP_MODE = 'appMode'
 export const SELECTED_ENTITY_ID = 'selectedEntityId'
@@ -31,6 +34,7 @@ export const SELECTED_METHOD = 'selectedMethod'
 export const RUN_STATUS = 'runStatus'
 export const METHOD_SCRIPT = 'methodScript'
 export const IS_METHOD_PRE_DEFINED = 'isMethodPreDefined'
+export const TURN_IN_PROGRESS = 'turnInProgress'
 
 //run statuses
 export const RunStatuses = {

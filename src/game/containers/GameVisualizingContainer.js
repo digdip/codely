@@ -14,17 +14,20 @@ class GameVisualizingContainer extends Component {
         this.onKeyDown = this.onKeyDown.bind(this)
         this.addEntity = this.addEntity.bind(this)
         this.changeAppMode = this.changeAppMode.bind(this)
+        this.updateVisualContainerSize = this.updateVisualContainerSize.bind(this)
     }
 
     addEntity() {
         this.props.actions.addNewEntity(appConstants.EntityType.SQUARE)
     }
 
+    componentDidMount() {
+        window.addEventListener('keydown', this.onKeyDown)
+    }
+
     componentDidUpdate(prevProps) {
-        if (this.props.appMode === appConstants.AppMode.GAME) {
-            window.addEventListener('keydown', this.onKeyDown)
-        } else {
-            window.removeEventListener('keydown', this.onKeyDown)
+        if (prevProps.turnInProgress && prevProps.turnInProgress !== this.props.turnInProgress) {
+            this.props.actions.doEnemiesTurn()
         }
     }
 
@@ -32,31 +35,39 @@ class GameVisualizingContainer extends Component {
         this.props.appMode === appConstants.AppMode.EDITING ? this.props.actions.enterGameMode() : this.props.actions.enterEditingMode()
     }
 
-    onKeyDown (e) {
+    updateVisualContainerSize(event) {
+        this.props.actions.updateGameBoardSize(event)
+    }
+
+    onKeyDown(e) {
+        if (this.props.turnInProgress || this.props.appMode !== appConstants.AppMode.GAME) {
+            return
+        }
         if (e.keyCode === 37) {
             e.preventDefault()
-            this.props.actions.runMethod(this.props.selectedEntityId, grammar.ON_KEY_LEFT)
+            this.props.actions.doTurn(grammar.ON_KEY_LEFT)
         } else if (e.keyCode === 38) {
             e.preventDefault()
-            this.props.actions.runMethod(this.props.selectedEntityId, grammar.ON_KEY_UP)
+            this.props.actions.doTurn(grammar.ON_KEY_UP)
         } else if (e.keyCode === 39) {
             e.preventDefault()
-            this.props.actions.runMethod(this.props.selectedEntityId, grammar.ON_KEY_RIGHT)
+            this.props.actions.doTurn(grammar.ON_KEY_RIGHT)
         } else if (e.keyCode === 40) {
             e.preventDefault()
-            this.props.actions.runMethod(this.props.selectedEntityId, grammar.ON_KEY_DOWN)
+            this.props.actions.doTurn(grammar.ON_KEY_DOWN)
         }
     }
 
     render() {
-        let theStyle = {backgroundColor : this.props.appMode === appConstants.AppMode.EDITING ? 'white' : '#d1d6d8'}
+        let theStyle = {backgroundColor: this.props.appMode === appConstants.AppMode.EDITING ? 'white' : '#d1d6d8'}
 
         return (
 
-            <div className='visualContainer' style={theStyle}>
+            <div className='visualContainer' style={theStyle} ref='vizContainer' onResize={this.updateVisualContainerSize()}>
                 <div className='toolbar'>
-                    <Button onClick={this.changeAppMode} icon='glyphicon-film' text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Stop Game'}/>
-               </div>
+                    <Button onClick={this.changeAppMode} icon='glyphicon-film'
+                            text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Stop Game'}/>
+                </div>
                 <div>
                     <VisualEntity data={this.props.mainCharacter} onClick={this.props.actions.selectEntity}/>
                     <VisualEntity data={this.props.enemy} onClick={this.props.actions.selectEntity}/>
@@ -69,10 +80,11 @@ class GameVisualizingContainer extends Component {
 function select(state) {
     return {
         selectedEntityId: state.gameReducer.get(grammar.SELECTED_ENTITY_ID),
-        mainCharacter: state.gameReducer.get(grammar.MAIN_CHARACTER),
-        enemy   : state.gameReducer.get(grammar.ENEMY),
+        mainCharacter: state.gameReducer.get(grammar.MAIN_CHARACTER_PROTOTYPE),
+        enemy: state.gameReducer.get(grammar.ENEMY_PROTOTYPE),
         selectedEntityRole: state.gameReducer.get(grammar.SELECTED_ENTITY_ROLE),
-        appMode   : state.gameReducer.get(grammar.APP_MODE)
+        appMode: state.gameReducer.get(grammar.APP_MODE),
+        turnInProgress: state.gameReducer.get(grammar.TURN_IN_PROGRESS)
     }
 }
 

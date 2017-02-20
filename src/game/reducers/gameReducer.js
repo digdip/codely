@@ -8,20 +8,23 @@ import uuid from 'uuid'
 
 function createInitialModel() {
     let model = {
-        mainCharacter: {},
-        enemy: {},
+        mainCharacterPrototype: {},
+        enemyPrototype: {},
         selectedEntityRole: appConstants.EntityRole.MAIN_CHARACTER,
-        appMode: appConstants.AppMode.EDITING
+        appMode: appConstants.AppMode.EDITING,
+        turnInProgress: false,
+        mainCharacter: {},
+        enemies: {}
     }
-    model[appConstants.EntityRole.MAIN_CHARACTER] = createSquare()
-    model[appConstants.EntityRole.ENEMY] = createSquare(appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3, null, 'blue')
+    model[appConstants.EntityRole.MAIN_CHARACTER] = createSquare(appConstants.EntityRole.MAIN_CHARACTER)
+    model[appConstants.EntityRole.ENEMY] = createSquare(appConstants.EntityRole.ENEMY, appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3, null, 'blue')
     return model
 }
 const initialState = Immutable.fromJS(createInitialModel())
 
 
 function getEntityRoleById(entityId, state) {
-    return entityId === state.getIn([grammar.MAIN_CHARACTER, grammar.ID]) ? grammar.MAIN_CHARACTER : grammar.ENEMY
+    return entityId === state.getIn([grammar.MAIN_CHARACTER_PROTOTYPE, grammar.ID]) ? grammar.MAIN_CHARACTER_PROTOTYPE : grammar.ENEMY_PROTOTYPE
 }
 
 export default function gameReducer(state = initialState, action = undefined) {
@@ -52,16 +55,33 @@ export default function gameReducer(state = initialState, action = undefined) {
         case types.PAUSE_ENTITY:
             return state.set(getEntityRoleById(action.entityId, state), reducerUtils.pauseRun(state.get(getEntityRoleById(action.entityId, state))))
         case types.ENTER_GAME_MODE:
+            state = generateGameWorld(state)
             return state.set(grammar.APP_MODE, appConstants.AppMode.GAME)
         case types.ENTER_EDITING_MODE:
             return state.set(grammar.APP_MODE, appConstants.AppMode.EDITING)
+        case types.DO_TURN:
+            state = state.set(appConstants.EntityRole.MAIN_CHARACTER, reducerUtils.runMethod(state.get(appConstants.EntityRole.MAIN_CHARACTER), action.methodName))
+            return state.set(grammar.TURN_IN_PROGRESS, false)
+        case types.DO_ENEMIES_TURN:
+
         default:
             return state
     }
 
 }
 
-function createSquare(xPos, yPos, color) {
+function addMainCharacterMethods(json) {
+    json[grammar.METHODS][grammar.ON_KEY_UP] = reducerUtils.createMethod(true)
+    json[grammar.METHODS][grammar.ON_KEY_DOWN] = reducerUtils.createMethod(true)
+    json[grammar.METHODS][grammar.ON_KEY_LEFT] = reducerUtils.createMethod(true)
+    json[grammar.METHODS][grammar.ON_KEY_RIGHT] = reducerUtils.createMethod(true)
+}
+
+function addEnemyMethods(json) {
+    json[grammar.METHODS][grammar.ON_MAIN_CHARACTER_MOVE] = reducerUtils.createMethod(true)
+}
+
+function createSquare(entityRole, xPos, yPos, color) {
     let id = uuid()
     let json = {
         id: id,
@@ -78,10 +98,11 @@ function createSquare(xPos, yPos, color) {
         runStatus: grammar.RunStatuses.IDLE
     }
     json[grammar.METHODS][grammar.MAIN_METHOD] = reducerUtils.createMethod(true, '')
-    json[grammar.METHODS][grammar.ON_KEY_UP] = reducerUtils.createMethod(true)
-    json[grammar.METHODS][grammar.ON_KEY_DOWN] = reducerUtils.createMethod(true)
-    json[grammar.METHODS][grammar.ON_KEY_LEFT] = reducerUtils.createMethod(true)
-    json[grammar.METHODS][grammar.ON_KEY_RIGHT] = reducerUtils.createMethod(true)
+    if (entityRole === appConstants.EntityRole.MAIN_CHARACTER) {
+        addMainCharacterMethods(json)
+    } else {
+        addEnemyMethods(json)
+    }
     json[grammar.PROPERTIES][grammar.X] = xPos ? xPos : appConstants.DEFAULT_X_POSITION
     json[grammar.PROPERTIES][grammar.Y] = yPos ? yPos : appConstants.DEFAULT_Y_POSITION
     json[grammar.PROPERTIES][grammar.WIDTH] = appConstants.DEFAULT_WIDTH
@@ -89,4 +110,17 @@ function createSquare(xPos, yPos, color) {
     json[grammar.PROPERTIES][grammar.COLOR] = color ? color : appConstants.DEFAULT_COLOR
 
     return json
+}
+
+function generateGameWorld(state, numberOfEnemies) {
+    let mainCharacterInstance = state.get(grammar.MAIN_CHARACTER_PROTOTYPE)
+    mainCharacterInstance.setIn([rammar.PROPERTIES, grammar.X], 50)
+    mainCharacterInstance.setIn([rammar.PROPERTIES, grammar.Y], 30)
+    state.set(grammar.MAIN_CHARACTER, mainCharacterInstance)
+
+    let enemies = Immutable.fromJS({})
+    for (let i = 0; i < numberOfEnemies; i++) {
+        let enemyInstance = state.get(grammar.ENEMY_PROTOTYPE)
+        enemies.push(enemyInstance)
+    }
 }

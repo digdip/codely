@@ -1,6 +1,6 @@
 import * as grammar from './grammar'
 
-export const GRID_SIZE_PIXELS = 20
+export const GRID_SIZE_PIXELS = 10
 
 //entity types
 export const EntityType = {
@@ -22,6 +22,6 @@ export const DEFAULT_COLOR = 'red'
 
 
 export const EntityRole = {
-    MAIN_CHARACTER: grammar.MAIN_CHARACTER,
-    ENEMY: grammar.ENEMY
+    MAIN_CHARACTER: grammar.MAIN_CHARACTER_PROTOTYPE,
+    ENEMY: grammar.ENEMY_PROTOTYPE
 }
