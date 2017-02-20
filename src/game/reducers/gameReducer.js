@@ -44,13 +44,13 @@ export default function gameReducer(state = initialState, action = undefined) {
             currentBody += action.text + ' '
             return state.setIn([getEntityRoleById(action.entityId, state), grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], currentBody)
         case types.RUN_METHOD:
-            return state.set(getEntityRoleById(action.entityId, state), reducerUtils.runMethod(state.get(entityPath), action.methodName))
+            return state.set(getEntityRoleById(action.entityId, state), reducerUtils.runMethod(state.get(getEntityRoleById(action.entityId, state)), action.methodName))
         case types.RUN_NEXT_LINE:
-            return state.set(getEntityRoleById(action.entityId, state), reducerUtils.runMethodNextLine(state.get(entityPath)))
+            return state.set(getEntityRoleById(action.entityId, state), reducerUtils.runMethodNextLine(state.get(getEntityRoleById(action.entityId, state))))
         case types.RESET_ENTITY:
-            return state.set(getEntityRoleById(action.entityId, state), reducerUtils.resetRun(state.get(entityPath)))
+            return state.set(getEntityRoleById(action.entityId, state), reducerUtils.resetRun(state.get(getEntityRoleById(action.entityId, state))))
         case types.PAUSE_ENTITY:
-            return state.set(getEntityRoleById(action.entityId, state), reducerUtils.pauseRun(state.get(entityPath)))
+            return state.set(getEntityRoleById(action.entityId, state), reducerUtils.pauseRun(state.get(getEntityRoleById(action.entityId, state))))
         case types.ENTER_GAME_MODE:
             return state.set(grammar.APP_MODE, appConstants.AppMode.GAME)
         case types.ENTER_EDITING_MODE:
