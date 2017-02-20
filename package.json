@@ -4,6 +4,7 @@
   "description": "Get started with coding",
   "main": "index.js",
   "scripts": {
+    "preinstall": "node bin/compile",
     "clean": "rimraf dist",
     "compile": "better-npm-run compile",
     "lint": "eslint bin build config server src tests",
@@ -42,7 +43,7 @@
       }
     },
     "start": {
-      "command": "node bin/compile && node bin/dev-server",
+      "command": "node bin/dev-server",
       "env": {
         "DEBUG": "app:*"
       }
