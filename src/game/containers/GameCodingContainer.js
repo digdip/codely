@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as gameActions from '../actions/gameActions'
-import * as commonActions from '../../common/actions/commonActions'
+import * as appConstants from  '../../const/appConstants'
 import * as grammar from  '../../const/grammar'
 
 import TextualEditor from '../../common/components/TextualEditor'
@@ -17,20 +17,18 @@ class GameCodingContainer extends Component {
     }
 
     onMethodBodyChange(value) {
-        let entity = this.props.entities.get(this.props.selectedEntityId)
-        this.props.actions.updateMethodBody(entity.get(grammar.ID), entity.get(grammar.SELECTED_METHOD), value)
+        this.props.actions.updateMethodBody(this.props.entity.get(grammar.ID), this.props.entity.get(grammar.SELECTED_METHOD), value)
     }
 
     render () {
-        let entity = this.props.entities.get(this.props.selectedEntityId)
         return (
             <div className='codeContainer'>
-                <PropertiesList data={entity} insertTextToMethod={this.props.actions.insertTextToMethod}/>
-                <MethodsList data={entity}
+                <PropertiesList data={this.props.entity} insertTextToMethod={this.props.actions.insertTextToMethod}/>
+                <MethodsList data={this.props.entity}
                              addNewMethod={this.props.actions.addNewMethod}
                              selectMethod={this.props.actions.selectMethod}/>
                 <TextualEditor
-                    data={entity}
+                    data={this.props.entity}
                     onChange={this.onMethodBodyChange}
                     runCode={this.props.actions.runMethod}
                     runNextLine={this.props.actions.runNextLine}
@@ -44,14 +42,13 @@ class GameCodingContainer extends Component {
 
 function select(state) {
     return {
-        entities: state.gameReducer.get(grammar.ENTITIES),
-        selectedEntityId: state.gameReducer.get(grammar.SELECTED_ENTITY_ID)
+        entity: state.gameReducer.get(grammar.SELECTED_ENTITY_ROLE) === appConstants.EntityRole.MAIN_CHARACTER ? state.gameReducer.get(grammar.MAIN_CHARACTER) : state.gameReducer.get(grammar.ENEMY)
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(Object.assign({}, gameActions, commonActions), dispatch)
+        actions: bindActionCreators(Object.assign({}, gameActions), dispatch)
     }
 }
 

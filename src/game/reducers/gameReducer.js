@@ -6,41 +6,51 @@ import Immutable from 'immutable'
 import uuid from 'uuid'
 
 
-const initialState = Immutable.fromJS({
-    entities: {},
-    selectedEntityId: null,
-    appMode: appConstants.AppMode.EDITING
-})
+function createInitialModel() {
+    let model = {
+        mainCharacter: {},
+        enemy: {},
+        selectedEntityRole: appConstants.EntityRole.MAIN_CHARACTER,
+        appMode: appConstants.AppMode.EDITING
+    }
+    model[appConstants.EntityRole.MAIN_CHARACTER] = createSquare()
+    model[appConstants.EntityRole.ENEMY] = createSquare(appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3, null, 'blue')
+    return model
+}
+const initialState = Immutable.fromJS(createInitialModel())
 
-export default function editorsReducer(state = initialState, action = undefined) {
+
+function getEntityRoleById(entityId, state) {
+    return entityId === state.getIn([grammar.MAIN_CHARACTER, grammar.ID]) ? grammar.MAIN_CHARACTER : grammar.ENEMY
+}
+
+export default function gameReducer(state = initialState, action = undefined) {
 
     switch (action.type) {
-        case types.ADD_NEW_ENTITY:
-            let newEntity = createEntity(action.entityType)
-            state = state.setIn([grammar.ENTITIES, newEntity.get(grammar.ID)], newEntity)
-            return state.set(grammar.SELECTED_ENTITY_ID, newEntity.get(grammar.ID))
+        case types.SELECT_ENTITY:
+            return state.set(grammar.SELECTED_ENTITY_ROLE, getEntityRoleById(action.entityId, state))
         case types.ADD_NEW_METHOD:
-            state = state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName], Immutable.fromJS(reducerUtils.createMethod()))
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.SELECTED_METHOD], action.methodName)
+            state = state.setIn([getEntityRoleById(action.entityId, state), grammar.METHODS, action.methodName], Immutable.fromJS(reducerUtils.createMethod()))
+            return state.setIn([getEntityRoleById(action.entityId, state), grammar.SELECTED_METHOD], action.methodName)
         case types.SELECT_METHOD:
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.SELECTED_METHOD], action.methodName)
+            return state.setIn([getEntityRoleById(action.entityId, state), grammar.SELECTED_METHOD], action.methodName)
         case types.UPDATE_METHOD_BODY:
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], action.methodBody)
+            return state.setIn([getEntityRoleById(action.entityId, state), grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], action.methodBody)
         case types.INSERT_TEXT_TO_METHOD:
-            let currentBody = state.getIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT])
+            let currentBody = state.getIn([getEntityRoleById(action.entityId, state), grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT])
             if (currentBody && !currentBody.endsWith(' ')) {
                 currentBody += ' '
             }
             currentBody += action.text + ' '
-            return state.setIn([grammar.ENTITIES, action.entityId, grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], currentBody)
+            return state.setIn([getEntityRoleById(action.entityId, state), grammar.METHODS, action.methodName, grammar.METHOD_SCRIPT], currentBody)
         case types.RUN_METHOD:
-            return state.setIn([grammar.ENTITIES, action.entityId], reducerUtils.runMethod(state.getIn([grammar.ENTITIES, action.entityId]), action.methodName))
+            return state.set(getEntityRoleById(action.entityId, state), reducerUtils.runMethod(state.get(getEntityRoleById(action.entityId, state)), action.methodName))
         case types.RUN_NEXT_LINE:
-            return state.setIn([grammar.ENTITIES, action.entityId], reducerUtils.runMethodNextLine(state.getIn([grammar.ENTITIES, action.entityId])))
+            return state.set(getEntityRoleById(action.entityId, state), reducerUtils.runMethodNextLine(state.get(getEntityRoleById(action.entityId, state))))
         case types.RESET_ENTITY:
-            return state.setIn([grammar.ENTITIES, action.entityId], reducerUtils.resetRun(state.getIn([grammar.ENTITIES, action.entityId])))
+            return state.set(getEntityRoleById(action.entityId, state), reducerUtils.resetRun(state.get(getEntityRoleById(action.entityId, state))))
         case types.PAUSE_ENTITY:
-            return state.setIn([grammar.ENTITIES, action.entityId], reducerUtils.pauseRun(state.getIn([grammar.ENTITIES, action.entityId])))
+            return state.set(getEntityRoleById(action.entityId, state), reducerUtils.pauseRun(state.get(getEntityRoleById(action.entityId, state))))
         case types.ENTER_GAME_MODE:
             return state.set(grammar.APP_MODE, appConstants.AppMode.GAME)
         case types.ENTER_EDITING_MODE:
@@ -51,16 +61,7 @@ export default function editorsReducer(state = initialState, action = undefined)
 
 }
 
-function createEntity(entityType, runMethodScript) {
-    switch (entityType) {
-        case appConstants.EntityType.SQUARE:
-            return createSquare(runMethodScript)
-        default:
-            return {}
-    }
-}
-
-function createSquare(runMethodScript) {
+function createSquare(xPos, yPos, color) {
     let id = uuid()
     let json = {
         id: id,
@@ -76,15 +77,16 @@ function createSquare(runMethodScript) {
         methodName: '',
         runStatus: grammar.RunStatuses.IDLE
     }
-    json[grammar.METHODS][grammar.MAIN_METHOD] = reducerUtils.createMethod(true, runMethodScript ? runMethodScript : '')
+    json[grammar.METHODS][grammar.MAIN_METHOD] = reducerUtils.createMethod(true, '')
     json[grammar.METHODS][grammar.ON_KEY_UP] = reducerUtils.createMethod(true)
     json[grammar.METHODS][grammar.ON_KEY_DOWN] = reducerUtils.createMethod(true)
     json[grammar.METHODS][grammar.ON_KEY_LEFT] = reducerUtils.createMethod(true)
     json[grammar.METHODS][grammar.ON_KEY_RIGHT] = reducerUtils.createMethod(true)
-    json[grammar.PROPERTIES][grammar.X] = appConstants.DEFAULT_X_POSITION
-    json[grammar.PROPERTIES][grammar.Y] = appConstants.DEFAULT_Y_POSITION
+    json[grammar.PROPERTIES][grammar.X] = xPos ? xPos : appConstants.DEFAULT_X_POSITION
+    json[grammar.PROPERTIES][grammar.Y] = yPos ? yPos : appConstants.DEFAULT_Y_POSITION
     json[grammar.PROPERTIES][grammar.WIDTH] = appConstants.DEFAULT_WIDTH
     json[grammar.PROPERTIES][grammar.HEIGHT] = appConstants.DEFAULT_HEIGHT
+    json[grammar.PROPERTIES][grammar.COLOR] = color ? color : appConstants.DEFAULT_COLOR
 
-    return Immutable.fromJS(json)
+    return json
 }

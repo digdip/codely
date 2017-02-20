@@ -1,3 +1,5 @@
+import * as grammar from './grammar'
+
 export const GRID_SIZE_PIXELS = 20
 
 //entity types
@@ -17,3 +19,9 @@ export const DEFAULT_Y_POSITION = 5
 export const DEFAULT_WIDTH = 2
 export const DEFAULT_HEIGHT = 2
 export const DEFAULT_COLOR = 'red'
+
+
+export const EntityRole = {
+    MAIN_CHARACTER: grammar.MAIN_CHARACTER,
+    ENEMY: grammar.ENEMY
+}

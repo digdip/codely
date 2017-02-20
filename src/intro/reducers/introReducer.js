@@ -22,7 +22,7 @@ function createDemo1() {
     return createEntity(appConstants.EntityType.SQUARE, script)
 }
 
-export default function editorsReducer(state = initialState, action = undefined) {
+export default function introReducer(state = initialState, action = undefined) {
 
     switch (action.type) {
         case types.ADD_NEW_METHOD:
@@ -97,6 +97,7 @@ function createSquare(runMethodScript, id) {
     json[grammar.PROPERTIES][grammar.Y] = appConstants.DEFAULT_Y_POSITION
     json[grammar.PROPERTIES][grammar.WIDTH] = appConstants.DEFAULT_WIDTH
     json[grammar.PROPERTIES][grammar.HEIGHT] = appConstants.DEFAULT_HEIGHT
+    json[grammar.PROPERTIES][grammar.COLOR] = appConstants.DEFAULT_COLOR
 
     return json
 }

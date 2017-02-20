@@ -51,7 +51,11 @@ export function runMethodNextLine(entity) {
 
     //////add properties of the entity to code
     entity.get(grammar.PROPERTIES).forEach(function (value, key) {
-        code.insertNewLine(key + ' = ' + value)
+        if (typeof value === 'string') {
+            code.insertNewLine(key + ' = "' + value + '"')
+        } else {
+            code.insertNewLine(key + ' = ' + value)
+        }
     })
 
     //////add all other methods to code

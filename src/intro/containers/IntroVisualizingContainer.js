@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux'
 import Button from '../../infra-components/Button'
 import VisualEntity from '../../common/components/VisualEntity'
 import * as introActions from '../actions/introActions'
-import * as commonActions from '../../common/actions/commonActions'
 import * as appConstants from '../../const/appConstants'
 import * as grammar from  '../../const/grammar'
 
@@ -48,9 +47,9 @@ class IntroVisualizingContainer extends Component {
                </div>
                 <div>
                     {this.props.entities.map((entity) =>
-                        <VisualEntity data={entity.get(grammar.PROPERTIES)}/>
+                        <VisualEntity data={entity}/>
                     )}
-                    <VisualEntity data={this.props.demos.getIn(['1', grammar.PROPERTIES])} isGhost={true}/>
+                    <VisualEntity data={this.props.demos.get('1')} isGhost={true}/>
                 </div>
             </div>
         )
@@ -67,7 +66,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(Object.assign({}, introActions, commonActions), dispatch)
+        actions: bindActionCreators(Object.assign({}, introActions), dispatch)
     }
 }
 
