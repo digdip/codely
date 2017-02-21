@@ -75,19 +75,35 @@ class GameVisualizingContainer extends Component {
                             text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Stop Game'}/>
                 </div>
                 <div>
-                    <VisualEntity data={this.props.mainCharacter} onClick={this.props.actions.selectEntity}/>
-                    <VisualEntity data={this.props.enemy} onClick={this.props.actions.selectEntity}/>
+                    { this.props.entities.map((entity) =>
+                        <VisualEntity data={entity} onClick={this.props.actions.selectEntity}/>
+                    )
+                    }
                 </div>
             </div>
         )
     }
 }
 
+function selectEntities(state) {
+    let entities = []
+    if (state.gameReducer.get(grammar.APP_MODE) === appConstants.AppMode.EDITING) {
+        entities.push(state.gameReducer.get(grammar.MAIN_CHARACTER_PROTOTYPE))
+        entities.push(state.gameReducer.get(grammar.ENEMY_PROTOTYPE))
+    } else {
+        entities.push(state.gameReducer.get(grammar.MAIN_CHARACTER))
+        let enemies = state.gameReducer.get(grammar.ENEMIES)
+        enemies.map((entity) =>
+            entities.push(entity)
+        )
+    }
+    return entities
+}
+
 function select(state) {
     return {
         selectedEntityId: state.gameReducer.get(grammar.SELECTED_ENTITY_ID),
-        mainCharacter: state.gameReducer.get(grammar.MAIN_CHARACTER_PROTOTYPE),
-        enemy: state.gameReducer.get(grammar.ENEMY_PROTOTYPE),
+        entities: selectEntities(state),
         selectedEntityRole: state.gameReducer.get(grammar.SELECTED_ENTITY_ROLE),
         appMode: state.gameReducer.get(grammar.APP_MODE),
         turnInProgress: state.gameReducer.get(grammar.TURN_IN_PROGRESS)

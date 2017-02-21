@@ -16,8 +16,8 @@ function createInitialModel() {
         mainCharacter: {},
         enemies: {},
         gameBoard: {
-            width: 0,
-            height: 0
+            Width: 0,
+            Height: 0
         }
     }
     model[appConstants.EntityRole.MAIN_CHARACTER] = createSquare(appConstants.EntityRole.MAIN_CHARACTER)
@@ -121,15 +121,19 @@ function createSquare(entityRole, xPos, yPos, color) {
 
 function generateGameWorld(state, numberOfEnemies) {
     let mainCharacterInstance = state.get(grammar.MAIN_CHARACTER_PROTOTYPE)
-    mainCharacterInstance = mainCharacterInstance.setIn([grammar.PROPERTIES, grammar.X], state.getIn([grammar.GAME_BOARD, grammar.WIDTH])/2)
-    mainCharacterInstance = mainCharacterInstance.setIn([grammar.PROPERTIES, grammar.Y], state.getIn([grammar.GAME_BOARD, grammar.HEIGHT])/2)
+    let xPos = Math.floor(state.getIn([grammar.GAME_BOARD, grammar.WIDTH]) / appConstants.GRID_SIZE_PIXELS) / 2
+    let yPos = Math.floor(state.getIn([grammar.GAME_BOARD, grammar.HEIGHT]) / appConstants.GRID_SIZE_PIXELS) / 2
+    mainCharacterInstance = mainCharacterInstance.setIn([grammar.PROPERTIES, grammar.X], xPos)
+    mainCharacterInstance = mainCharacterInstance.setIn([grammar.PROPERTIES, grammar.Y], yPos)
     state = state.set(grammar.MAIN_CHARACTER, mainCharacterInstance)
 
     let enemies = Immutable.fromJS({})
     for (let i = 0; i < numberOfEnemies; i++) {
         let enemyInstance = state.get(grammar.ENEMY_PROTOTYPE)
-        enemyInstance = enemyInstance.setIn([grammar.PROPERTIES, grammar.X], Math.floor(Math.random() * state.getIn([grammar.GAME_BOARD, grammar.WIDTH])))
-        enemyInstance = enemyInstance.setIn([grammar.PROPERTIES, grammar.Y], Math.floor(Math.random() * state.getIn([grammar.GAME_BOARD, grammar.HEIGHT])))
+        xPos = Math.floor(Math.random() * state.getIn([grammar.GAME_BOARD, grammar.WIDTH]) / appConstants.GRID_SIZE_PIXELS)
+        yPos = Math.floor(Math.random() * state.getIn([grammar.GAME_BOARD, grammar.HEIGHT]) / appConstants.GRID_SIZE_PIXELS)
+        enemyInstance = enemyInstance.setIn([grammar.PROPERTIES, grammar.X], xPos)
+        enemyInstance = enemyInstance.setIn([grammar.PROPERTIES, grammar.Y], yPos)
         enemies = enemies.set(uuid(), enemyInstance)
     }
     return state.set(grammar.ENEMIES, enemies)
