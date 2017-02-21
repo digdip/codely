@@ -92,7 +92,7 @@ function createSquare(runMethodScript, id) {
         methodName: '',
         runStatus: grammar.RunStatuses.IDLE
     }
-    json[grammar.METHODS][grammar.MAIN_METHOD] = reducerUtils.createMethod(true, runMethodScript ? runMethodScript : '')
+    json[grammar.METHODS][grammar.MAIN_METHOD] = reducerUtils.createMethod(true, null, runMethodScript ? runMethodScript : '')
     json[grammar.PROPERTIES][grammar.X] = appConstants.DEFAULT_X_POSITION
     json[grammar.PROPERTIES][grammar.Y] = appConstants.DEFAULT_Y_POSITION
     json[grammar.PROPERTIES][grammar.WIDTH] = appConstants.DEFAULT_WIDTH

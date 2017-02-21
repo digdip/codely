@@ -25,3 +25,6 @@ export const EntityRole = {
     MAIN_CHARACTER: grammar.MAIN_CHARACTER_PROTOTYPE,
     ENEMY: grammar.ENEMY_PROTOTYPE
 }
+
+export const GAME_PARAM_MAIN_CHAR_X_POS = 'playerLeft'
+export const GAME_PARAM_MAIN_CHAR_Y_POS = 'playerTop'

@@ -35,6 +35,7 @@ export const SELECTED_METHOD = 'selectedMethod'
 export const RUN_STATUS = 'runStatus'
 export const METHOD_SCRIPT = 'methodScript'
 export const IS_METHOD_PRE_DEFINED = 'isMethodPreDefined'
+export const METHOD_PARAMS = 'methodsParams'
 export const TURN_IN_PROGRESS = 'turnInProgress'
 
 //run statuses

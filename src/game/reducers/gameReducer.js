@@ -67,14 +67,31 @@ export default function gameReducer(state = initialState, action = undefined) {
             state = state.setIn([grammar.GAME_BOARD, grammar.WIDTH], action.width)
             return state.setIn([grammar.GAME_BOARD, grammar.HEIGHT], action.height)
         case types.DO_TURN:
-            state = state.set(appConstants.EntityRole.MAIN_CHARACTER, reducerUtils.runMethod(state.get(appConstants.EntityRole.MAIN_CHARACTER), action.methodName))
-            return state.set(grammar.TURN_IN_PROGRESS, false)
+            state = state.set(grammar.MAIN_CHARACTER, reducerUtils.runMethod(state.get(grammar.MAIN_CHARACTER), action.methodName))
+            return state.set(grammar.TURN_IN_PROGRESS, true)
         case types.DO_ENEMIES_TURN:
-
+            state = doEnemiesTurns(state)
+            return state.set(grammar.TURN_IN_PROGRESS, false)
         default:
             return state
     }
 
+}
+
+function doEnemiesTurns(state) {
+    let runContext = []
+    runContext.push({
+        key: appConstants.GAME_PARAM_MAIN_CHAR_X_POS,
+        value: state.getIn([grammar.MAIN_CHARACTER, grammar.PROPERTIES, grammar.X])
+    })
+    runContext.push({
+        key: appConstants.GAME_PARAM_MAIN_CHAR_Y_POS,
+        value: state.getIn([grammar.MAIN_CHARACTER, grammar.PROPERTIES, grammar.Y])
+    })
+    state.get(grammar.ENEMIES).map((enemy, enemyId) => {
+        state = state.setIn([grammar.ENEMIES, enemyId], reducerUtils.runMethod(enemy, grammar.ON_MAIN_CHARACTER_MOVE, runContext))
+    })
+    return state
 }
 
 function addMainCharacterMethods(json) {
@@ -85,7 +102,8 @@ function addMainCharacterMethods(json) {
 }
 
 function addEnemyMethods(json) {
-    json[grammar.METHODS][grammar.ON_MAIN_CHARACTER_MOVE] = reducerUtils.createMethod(true)
+    let params = [appConstants.GAME_PARAM_MAIN_CHAR_X_POS, appConstants.GAME_PARAM_MAIN_CHAR_Y_POS]
+    json[grammar.METHODS][grammar.ON_MAIN_CHARACTER_MOVE] = reducerUtils.createMethod(true, params)
 }
 
 function createSquare(entityRole, xPos, yPos, color) {
@@ -97,14 +115,13 @@ function createSquare(entityRole, xPos, yPos, color) {
         properties: {},
         methods: {},
         eventHandlers: {},
-        selectedMethod: grammar.MAIN_METHOD
+        selectedMethod: ''
     }
     json[grammar.RUN_DATA] = {
         lineNumber: -1,
         methodName: '',
         runStatus: grammar.RunStatuses.IDLE
     }
-    json[grammar.METHODS][grammar.MAIN_METHOD] = reducerUtils.createMethod(true, '')
     if (entityRole === appConstants.EntityRole.MAIN_CHARACTER) {
         addMainCharacterMethods(json)
     } else {
@@ -125,6 +142,7 @@ function generateGameWorld(state, numberOfEnemies) {
     let yPos = Math.floor(state.getIn([grammar.GAME_BOARD, grammar.HEIGHT]) / appConstants.GRID_SIZE_PIXELS) / 2
     mainCharacterInstance = mainCharacterInstance.setIn([grammar.PROPERTIES, grammar.X], xPos)
     mainCharacterInstance = mainCharacterInstance.setIn([grammar.PROPERTIES, grammar.Y], yPos)
+    mainCharacterInstance = mainCharacterInstance.set(grammar.ID, uuid())
     state = state.set(grammar.MAIN_CHARACTER, mainCharacterInstance)
 
     let enemies = Immutable.fromJS({})
@@ -134,7 +152,8 @@ function generateGameWorld(state, numberOfEnemies) {
         yPos = Math.floor(Math.random() * state.getIn([grammar.GAME_BOARD, grammar.HEIGHT]) / appConstants.GRID_SIZE_PIXELS)
         enemyInstance = enemyInstance.setIn([grammar.PROPERTIES, grammar.X], xPos)
         enemyInstance = enemyInstance.setIn([grammar.PROPERTIES, grammar.Y], yPos)
-        enemies = enemies.set(uuid(), enemyInstance)
+        enemyInstance = enemyInstance.set(grammar.ID, uuid())
+        enemies = enemies.set(enemyInstance.get(grammar.ID), enemyInstance)
     }
     return state.set(grammar.ENEMIES, enemies)
 }

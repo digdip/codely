@@ -38,7 +38,7 @@ class MethodsList extends Component {
         this.props.selectMethod(this.props.data.get(grammar.ID), methodName)
     }
 
-    onKeyDown (e) {
+    onKeyDown(e) {
         // Escape was typed
         if (e.keyCode === 27) {
             e.preventDefault()
@@ -49,17 +49,27 @@ class MethodsList extends Component {
         }
     }
 
-    render () {
+    render() {
         if (this.props.data) {
             let methods = this.props.data.get(grammar.METHODS)
             let tableModel = []
-            methods.map ((methodBody, methodName) =>
-                tableModel.push({
-                    id: methodName,
-                    text : methodName,
-                    readOnly: methodBody.get(grammar.IS_METHOD_PRE_DEFINED),
-                    isSelected : this.props.data.get(grammar.SELECTED_METHOD) === methodName
-                })
+            methods.map((methodBody, methodName) => {
+                    var methodTitle = methodName
+                    if (methodBody.get(grammar.METHOD_PARAMS)) {
+                        methodTitle += ' ('
+                        methodBody.get(grammar.METHOD_PARAMS).map((paramName) => {
+                            methodTitle += paramName + ', '
+                        })
+                        methodTitle = methodTitle.substring(0, methodTitle.length - 2)
+                        methodTitle += ')'
+                    }
+                    tableModel.push({
+                        id: methodName,
+                        text: methodTitle,
+                        readOnly: methodBody.get(grammar.IS_METHOD_PRE_DEFINED),
+                        isSelected: this.props.data.get(grammar.SELECTED_METHOD) === methodName
+                    })
+                }
             )
 
             return (

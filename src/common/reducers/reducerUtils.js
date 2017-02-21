@@ -13,20 +13,21 @@ export function pauseRun(entity) {
 }
 
 
-export function createMethod(isPreDefined = false, script = '') {
+export function createMethod(isPreDefined = false, params, script = '') {
     let json = {}
     json[grammar.METHOD_SCRIPT] = script
     json[grammar.IS_METHOD_PRE_DEFINED] = isPreDefined
+    json[grammar.METHOD_PARAMS] = params
     return json
 }
 
-export function runMethod(entity, methodName) {
+export function runMethod(entity, methodName, context) {
     entity = entity.setIn([grammar.RUN_DATA, grammar.METHOD_NAME], methodName)
     entity = entity.setIn([grammar.RUN_DATA, grammar.RUN_STATUS], grammar.RunStatuses.RUNNING)
-    return runMethodNextLine(entity)
+    return runMethodNextLine(entity, context)
 }
 
-export function runMethodNextLine(entity) {
+export function runMethodNextLine(entity, context) {
 
     if (entity.getIn([grammar.RUN_DATA, grammar.RUN_STATUS]) !== grammar.RunStatuses.RUNNING) {
         return entity
@@ -57,6 +58,17 @@ export function runMethodNextLine(entity) {
             code.insertNewLine(key + ' = ' + value)
         }
     })
+
+    // add context to the code
+    if (context) {
+        context.forEach(function (item) {
+            if (typeof item.value === 'string') {
+                code.insertNewLine(item.key + ' = "' + item.value + '"')
+            } else {
+                code.insertNewLine(item.key + ' = ' + item.value)
+            }
+        })
+    }
 
     //////add all other methods to code
     entity.get(grammar.METHODS).forEach(function (value, key) {

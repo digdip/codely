@@ -35,7 +35,7 @@ class GameVisualizingContainer extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.turnInProgress && prevProps.turnInProgress !== this.props.turnInProgress) {
+        if (this.props.turnInProgress && prevProps.turnInProgress !== this.props.turnInProgress) {
             this.props.actions.doEnemiesTurn()
         }
         this.props.actions.updateGameBoardSize(this.refs.vizContainer.clientWidth, this.refs.vizContainer.clientHeight)
