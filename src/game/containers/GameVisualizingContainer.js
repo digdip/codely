@@ -73,6 +73,7 @@ class GameVisualizingContainer extends Component {
                 <div className='toolbar'>
                     <Button onClick={this.changeAppMode} icon='glyphicon-film'
                             text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Stop Game'}/>
+                    <Button onClick={function() {localStorage.clear()}} text='Reset Local Storage'/>
                 </div>
                 <div>
                     { this.props.entities.map((entity) =>
