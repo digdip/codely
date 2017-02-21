@@ -49,6 +49,27 @@ export function runMethod(entityId, methodName) {
     }
 }
 
+export function doTurn(methodName) {
+    return {
+        type: types.DO_TURN,
+        methodName
+    }
+}
+
+export function doEnemiesTurn() {
+    return {
+        type: types.DO_ENEMIES_TURN
+    }
+}
+
+export function updateGameBoardSize(width, height) {
+    return {
+        type: types.UPDATE_GAME_BOARD_SIZE,
+        width,
+        height
+    }
+}
+
 export function runNextLine(entityId) {
     return {
         type: types.RUN_NEXT_LINE,

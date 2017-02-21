@@ -42,7 +42,7 @@ class GameCodingContainer extends Component {
 
 function select(state) {
     return {
-        entity: state.gameReducer.get(grammar.SELECTED_ENTITY_ROLE) === appConstants.EntityRole.MAIN_CHARACTER ? state.gameReducer.get(grammar.MAIN_CHARACTER) : state.gameReducer.get(grammar.ENEMY)
+        entity: state.gameReducer.get(grammar.SELECTED_ENTITY_ROLE) === appConstants.EntityRole.MAIN_CHARACTER ? state.gameReducer.get(grammar.MAIN_CHARACTER_PROTOTYPE) : state.gameReducer.get(grammar.ENEMY_PROTOTYPE)
     }
 }
 
