@@ -62,9 +62,11 @@ export function doEnemiesTurn() {
     }
 }
 
-export function updateGameBoardSize(event) {
+export function updateGameBoardSize(width, height) {
     return {
-        type: types.UPDATE_GAME_BOARD_SIZE
+        type: types.UPDATE_GAME_BOARD_SIZE,
+        width,
+        height
     }
 }
 

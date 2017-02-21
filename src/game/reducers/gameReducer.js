@@ -14,7 +14,11 @@ function createInitialModel() {
         appMode: appConstants.AppMode.EDITING,
         turnInProgress: false,
         mainCharacter: {},
-        enemies: {}
+        enemies: {},
+        gameBoard: {
+            width: 0,
+            height: 0
+        }
     }
     model[appConstants.EntityRole.MAIN_CHARACTER] = createSquare(appConstants.EntityRole.MAIN_CHARACTER)
     model[appConstants.EntityRole.ENEMY] = createSquare(appConstants.EntityRole.ENEMY, appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3, null, 'blue')
@@ -55,10 +59,13 @@ export default function gameReducer(state = initialState, action = undefined) {
         case types.PAUSE_ENTITY:
             return state.set(getEntityRoleById(action.entityId, state), reducerUtils.pauseRun(state.get(getEntityRoleById(action.entityId, state))))
         case types.ENTER_GAME_MODE:
-            state = generateGameWorld(state)
+            state = generateGameWorld(state, 4)
             return state.set(grammar.APP_MODE, appConstants.AppMode.GAME)
         case types.ENTER_EDITING_MODE:
             return state.set(grammar.APP_MODE, appConstants.AppMode.EDITING)
+        case types.UPDATE_GAME_BOARD_SIZE:
+            state = state.setIn([grammar.GAME_BOARD, grammar.WIDTH], action.width)
+            return state.setIn([grammar.GAME_BOARD, grammar.HEIGHT], action.height)
         case types.DO_TURN:
             state = state.set(appConstants.EntityRole.MAIN_CHARACTER, reducerUtils.runMethod(state.get(appConstants.EntityRole.MAIN_CHARACTER), action.methodName))
             return state.set(grammar.TURN_IN_PROGRESS, false)
@@ -114,13 +121,16 @@ function createSquare(entityRole, xPos, yPos, color) {
 
 function generateGameWorld(state, numberOfEnemies) {
     let mainCharacterInstance = state.get(grammar.MAIN_CHARACTER_PROTOTYPE)
-    mainCharacterInstance.setIn([rammar.PROPERTIES, grammar.X], 50)
-    mainCharacterInstance.setIn([rammar.PROPERTIES, grammar.Y], 30)
-    state.set(grammar.MAIN_CHARACTER, mainCharacterInstance)
+    mainCharacterInstance = mainCharacterInstance.setIn([grammar.PROPERTIES, grammar.X], state.getIn([grammar.GAME_BOARD, grammar.WIDTH])/2)
+    mainCharacterInstance = mainCharacterInstance.setIn([grammar.PROPERTIES, grammar.Y], state.getIn([grammar.GAME_BOARD, grammar.HEIGHT])/2)
+    state = state.set(grammar.MAIN_CHARACTER, mainCharacterInstance)
 
     let enemies = Immutable.fromJS({})
     for (let i = 0; i < numberOfEnemies; i++) {
         let enemyInstance = state.get(grammar.ENEMY_PROTOTYPE)
-        enemies.push(enemyInstance)
+        enemyInstance = enemyInstance.setIn([grammar.PROPERTIES, grammar.X], Math.floor(Math.random() * state.getIn([grammar.GAME_BOARD, grammar.WIDTH])))
+        enemyInstance = enemyInstance.setIn([grammar.PROPERTIES, grammar.Y], Math.floor(Math.random() * state.getIn([grammar.GAME_BOARD, grammar.HEIGHT])))
+        enemies = enemies.set(uuid(), enemyInstance)
     }
+    return state.set(grammar.ENEMIES, enemies)
 }

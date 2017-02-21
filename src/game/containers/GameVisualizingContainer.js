@@ -14,29 +14,35 @@ class GameVisualizingContainer extends Component {
         this.onKeyDown = this.onKeyDown.bind(this)
         this.addEntity = this.addEntity.bind(this)
         this.changeAppMode = this.changeAppMode.bind(this)
-        this.updateVisualContainerSize = this.updateVisualContainerSize.bind(this)
+        this.updateBoardSize = this.updateBoardSize.bind(this)
     }
 
     addEntity() {
         this.props.actions.addNewEntity(appConstants.EntityType.SQUARE)
     }
 
+    updateBoardSize() {
+        this.props.actions.updateGameBoardSize(this.refs.vizContainer.clientWidth, this.refs.vizContainer.clientHeight)
+    }
+
     componentDidMount() {
         window.addEventListener('keydown', this.onKeyDown)
+        setTimeout(this.updateBoardSize, 2000)
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return true
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.turnInProgress && prevProps.turnInProgress !== this.props.turnInProgress) {
             this.props.actions.doEnemiesTurn()
         }
+        this.props.actions.updateGameBoardSize(this.refs.vizContainer.clientWidth, this.refs.vizContainer.clientHeight)
     }
 
     changeAppMode() {
         this.props.appMode === appConstants.AppMode.EDITING ? this.props.actions.enterGameMode() : this.props.actions.enterEditingMode()
-    }
-
-    updateVisualContainerSize(event) {
-        this.props.actions.updateGameBoardSize(event)
     }
 
     onKeyDown(e) {
@@ -63,7 +69,7 @@ class GameVisualizingContainer extends Component {
 
         return (
 
-            <div className='visualContainer' style={theStyle} ref='vizContainer' onResize={this.updateVisualContainerSize()}>
+            <div className='visualContainer' style={theStyle} ref='vizContainer'>
                 <div className='toolbar'>
                     <Button onClick={this.changeAppMode} icon='glyphicon-film'
                             text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Stop Game'}/>
