@@ -10,7 +10,9 @@ class VisualEntity extends Component {
     }
 
     onClick() {
-        this.props.onClick(this.props.data.get(grammar.ID))
+        if (this.props.onClick) {
+            this.props.onClick(this.props.data.get(grammar.ID))
+        }
     }
 
     render () {
