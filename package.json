@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Get started with coding",
   "main": "index.js",
+  "engines": {
+    "node": "6.9.5",
+    "npm": "4.2.0"
+  },
   "scripts": {
     "preinstall": "node bin/compile",
     "clean": "rimraf dist",
