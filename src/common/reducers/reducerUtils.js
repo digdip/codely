@@ -21,13 +21,13 @@ export function createMethod(isPreDefined = false, params, script = '') {
     return json
 }
 
-export function runMethod(entity, methodName, context) {
+export function runMethod(entity, methodName) {
     entity = entity.setIn([grammar.RUN_DATA, grammar.METHOD_NAME], methodName)
     entity = entity.setIn([grammar.RUN_DATA, grammar.RUN_STATUS], grammar.RunStatuses.RUNNING)
-    return runMethodNextLine(entity, context)
+    return runMethodNextLine(entity)
 }
 
-export function runMethodNextLine(entity, context) {
+export function runMethodNextLine(entity) {
 
     if (entity.getIn([grammar.RUN_DATA, grammar.RUN_STATUS]) !== grammar.RunStatuses.RUNNING) {
         return entity
@@ -48,8 +48,6 @@ export function runMethodNextLine(entity, context) {
     //increment line number
     entity = entity.setIn([grammar.RUN_DATA, grammar.LINE_NUMBER], ++lineNumber)
 
-    //prepare context
-
     //////add properties of the entity to code
     entity.get(grammar.PROPERTIES).forEach(function (value, key) {
         if (typeof value === 'string') {
@@ -59,9 +57,10 @@ export function runMethodNextLine(entity, context) {
         }
     })
 
-    // add context to the code
-    if (context) {
-        context.forEach(function (item) {
+    // add envVars to the code
+    let envVars = entity.getIn([grammar.RUN_DATA, grammar.ENV_VARS])
+    if (envVars) {
+        envVars.forEach(function (item) {
             if (typeof item.value === 'string') {
                 code.insertNewLine(item.key + ' = "' + item.value + '"')
             } else {

@@ -49,16 +49,16 @@ export function runMethod(entityId, methodName) {
     }
 }
 
-export function doTurn(methodName) {
+export function startTurn(methodName) {
     return {
-        type: types.DO_TURN,
+        type: types.START_TURN,
         methodName
     }
 }
 
-export function doEnemiesTurn() {
+export function continueTurn() {
     return {
-        type: types.DO_ENEMIES_TURN
+        type: types.CONTINUE_TURN
     }
 }
 

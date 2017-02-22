@@ -12,7 +12,7 @@ function createInitialModel() {
         enemyPrototype: {},
         selectedEntityRole: appConstants.EntityRole.MAIN_CHARACTER,
         appMode: appConstants.AppMode.EDITING,
-        turnInProgress: false,
+        turnStatus: grammar.TurnStatuses.IDLE,
         mainCharacter: {},
         enemies: {},
         gameBoard: {
@@ -66,32 +66,71 @@ export default function gameReducer(state = initialState, action = undefined) {
         case types.UPDATE_GAME_BOARD_SIZE:
             state = state.setIn([grammar.GAME_BOARD, grammar.WIDTH], action.width)
             return state.setIn([grammar.GAME_BOARD, grammar.HEIGHT], action.height)
-        case types.DO_TURN:
+        case types.START_TURN:
             state = state.set(grammar.MAIN_CHARACTER, reducerUtils.runMethod(state.get(grammar.MAIN_CHARACTER), action.methodName))
-            return state.set(grammar.TURN_IN_PROGRESS, true)
-        case types.DO_ENEMIES_TURN:
-            state = doEnemiesTurns(state)
-            return state.set(grammar.TURN_IN_PROGRESS, false)
+            return state.set(grammar.TURN_STATUS, grammar.TurnStatuses.MAIN_CHAR_RUNNING)
+        case types.CONTINUE_TURN:
+            return continueTurn(state)
         default:
             return state
     }
-
 }
 
-function doEnemiesTurns(state) {
-    let runContext = []
-    runContext.push({
+function startEnemiesTurn(state) {
+    let envVars = []
+    envVars.push({
         key: appConstants.GAME_PARAM_MAIN_CHAR_X_POS,
         value: state.getIn([grammar.MAIN_CHARACTER, grammar.PROPERTIES, grammar.X])
     })
-    runContext.push({
+    envVars.push({
         key: appConstants.GAME_PARAM_MAIN_CHAR_Y_POS,
         value: state.getIn([grammar.MAIN_CHARACTER, grammar.PROPERTIES, grammar.Y])
     })
+
+    state = state.set(grammar.TURN_STATUS, grammar.TurnStatuses.ENEMIES_RUNNING)
     state.get(grammar.ENEMIES).map((enemy, enemyId) => {
-        state = state.setIn([grammar.ENEMIES, enemyId], reducerUtils.runMethod(enemy, grammar.ON_MAIN_CHARACTER_MOVE, runContext))
+        enemy = enemy.setIn([grammar.RUN_DATA, grammar.ENV_VARS], envVars)
+        state = state.setIn([grammar.ENEMIES, enemyId], reducerUtils.runMethod(enemy, grammar.ON_MAIN_CHARACTER_MOVE))
     })
     return state
+}
+
+function continueMainCharTurn(state) {
+    state = state.set(grammar.MAIN_CHARACTER, reducerUtils.runMethodNextLine(state.get(grammar.MAIN_CHARACTER)))
+    if (state.getIn([grammar.MAIN_CHARACTER, grammar.RUN_DATA, grammar.RUN_STATUS]) === grammar.RunStatuses.IDLE) {
+        state = state.set(grammar.TURN_STATUS, grammar.TurnStatuses.MAIN_CHAR_DONE)
+    }
+    return state
+}
+
+function continueEnemiesTurn(state) {
+    let finishedTurn = true
+    state.get(grammar.ENEMIES).map((enemy, enemyId) => {
+        state = state.setIn([grammar.ENEMIES, enemyId], reducerUtils.runMethodNextLine(state.getIn([grammar.ENEMIES, enemyId])))
+        if (state.getIn([grammar.ENEMIES, enemyId, grammar.RUN_DATA, grammar.RUN_STATUS]) !== grammar.RunStatuses.IDLE) {
+            finishedTurn = false
+        }
+    })
+    if(finishedTurn) {
+        state = state.set(grammar.TURN_STATUS, grammar.TurnStatuses.IDLE)
+    }
+    return state
+}
+
+function continueTurn(state) {
+    switch (state.get(grammar.TURN_STATUS)) {
+        case grammar.TurnStatuses.MAIN_CHAR_RUNNING:
+            //continue main turn
+            return continueMainCharTurn(state)
+        case grammar.TurnStatuses.MAIN_CHAR_DONE:
+            //start enemies turns
+            return startEnemiesTurn(state)
+        case grammar.TurnStatuses.ENEMIES_RUNNING:
+            //continue enemies turns
+            return continueEnemiesTurn(state)
+        default:
+            return state
+    }
 }
 
 function addMainCharacterMethods(json) {
@@ -120,6 +159,7 @@ function createSquare(entityRole, xPos, yPos, color) {
     json[grammar.RUN_DATA] = {
         lineNumber: -1,
         methodName: '',
+        envVars: [],
         runStatus: grammar.RunStatuses.IDLE
     }
     if (entityRole === appConstants.EntityRole.MAIN_CHARACTER) {
