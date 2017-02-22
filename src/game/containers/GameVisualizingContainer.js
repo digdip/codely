@@ -30,13 +30,9 @@ class GameVisualizingContainer extends Component {
         setTimeout(this.updateBoardSize, 2000)
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return true
-    }
-
     componentDidUpdate(prevProps) {
-        if (this.props.turnInProgress && prevProps.turnInProgress !== this.props.turnInProgress) {
-            this.props.actions.doEnemiesTurn()
+        if (this.props.turnStatus !== grammar.TurnStatuses.IDLE) {
+            this.props.actions.continueTurn()
         }
         this.props.actions.updateGameBoardSize(this.refs.vizContainer.clientWidth, this.refs.vizContainer.clientHeight)
     }
@@ -46,21 +42,22 @@ class GameVisualizingContainer extends Component {
     }
 
     onKeyDown(e) {
-        if (this.props.turnInProgress || this.props.appMode !== appConstants.AppMode.GAME) {
+        //we don't want to handle keyboard during turn and when not in game mode
+        if (this.props.turnStatus !== grammar.TurnStatuses.IDLE || this.props.appMode !== appConstants.AppMode.GAME) {
             return
         }
         if (e.keyCode === 37) {
             e.preventDefault()
-            this.props.actions.doTurn(grammar.ON_KEY_LEFT)
+            this.props.actions.startTurn(grammar.ON_KEY_LEFT)
         } else if (e.keyCode === 38) {
             e.preventDefault()
-            this.props.actions.doTurn(grammar.ON_KEY_UP)
+            this.props.actions.startTurn(grammar.ON_KEY_UP)
         } else if (e.keyCode === 39) {
             e.preventDefault()
-            this.props.actions.doTurn(grammar.ON_KEY_RIGHT)
+            this.props.actions.startTurn(grammar.ON_KEY_RIGHT)
         } else if (e.keyCode === 40) {
             e.preventDefault()
-            this.props.actions.doTurn(grammar.ON_KEY_DOWN)
+            this.props.actions.startTurn(grammar.ON_KEY_DOWN)
         }
     }
 
@@ -109,7 +106,7 @@ function select(state) {
         entities: selectEntities(state),
         selectedEntityId: state.gameReducer.getIn([state.gameReducer.get(grammar.SELECTED_ENTITY_ROLE), grammar.ID]),
         appMode: state.gameReducer.get(grammar.APP_MODE),
-        turnInProgress: state.gameReducer.get(grammar.TURN_IN_PROGRESS)
+        turnStatus: state.gameReducer.get(grammar.TURN_STATUS)
     }
 }
 

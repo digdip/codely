@@ -55,11 +55,11 @@ const TextualEditor = React.createClass({
     componentDidUpdate(prevProps) {
         let selectedMethodBody = this.props.data ? this.props.data.getIn([grammar.METHODS, this.props.data.get(grammar.SELECTED_METHOD)]) : ''
         let prevSelectedMethodBody = prevProps.data ? prevProps.data.getIn([grammar.METHODS, prevProps.data.get(grammar.SELECTED_METHOD)]) : ''
-        let runNextLine = this.props.runNextLine
-        let entityId = this.props.data.get(grammar.ID)
         if (selectedMethodBody !== prevSelectedMethodBody) {
             this.refs.editor.editor.focus()
         }
+        let runNextLine = this.props.runNextLine
+        let entityId = this.props.data.get(grammar.ID)
         if (this.props.data.getIn([grammar.RUN_DATA, grammar.LINE_NUMBER]) > -1) {
             setTimeout(function () {
                 runNextLine(entityId)}, 1100)
