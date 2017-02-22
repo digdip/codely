@@ -77,7 +77,10 @@ class GameVisualizingContainer extends Component {
                 </div>
                 <div>
                     { this.props.entities.map((entity) =>
-                        <VisualEntity data={entity} onClick={this.props.actions.selectEntity}/>
+                        <VisualEntity data={entity}
+                                      onClick={this.props.actions.selectEntity}
+                                      isSelected={this.props.selectedEntityId === entity.get(grammar.ID)}
+                        />
                     )
                     }
                 </div>
@@ -103,9 +106,8 @@ function selectEntities(state) {
 
 function select(state) {
     return {
-        selectedEntityId: state.gameReducer.get(grammar.SELECTED_ENTITY_ID),
         entities: selectEntities(state),
-        selectedEntityRole: state.gameReducer.get(grammar.SELECTED_ENTITY_ROLE),
+        selectedEntityId: state.gameReducer.getIn([state.gameReducer.get(grammar.SELECTED_ENTITY_ROLE), grammar.ID]),
         appMode: state.gameReducer.get(grammar.APP_MODE),
         turnInProgress: state.gameReducer.get(grammar.TURN_IN_PROGRESS)
     }
