@@ -138,6 +138,10 @@ function addMainCharacterMethods(json) {
     json[grammar.METHODS][grammar.ON_KEY_DOWN] = reducerUtils.createMethod(true)
     json[grammar.METHODS][grammar.ON_KEY_LEFT] = reducerUtils.createMethod(true)
     json[grammar.METHODS][grammar.ON_KEY_RIGHT] = reducerUtils.createMethod(true)
+    json[grammar.METHODS][grammar.ON_KEY_UP_RIGHT] = reducerUtils.createMethod(true)
+    json[grammar.METHODS][grammar.ON_KEY_DOWN_RIGHT] = reducerUtils.createMethod(true)
+    json[grammar.METHODS][grammar.ON_KEY_DOWN_LEFT] = reducerUtils.createMethod(true)
+    json[grammar.METHODS][grammar.ON_KEY_UP_LEFT] = reducerUtils.createMethod(true)
 }
 
 function addEnemyMethods(json) {
