@@ -46,18 +46,30 @@ class GameVisualizingContainer extends Component {
         if (this.props.turnStatus !== grammar.TurnStatuses.IDLE || this.props.appMode !== appConstants.AppMode.GAME) {
             return
         }
-        if (e.keyCode === 37) {
+        if (e.keyCode === 100) {
             e.preventDefault()
             this.props.actions.startTurn(grammar.ON_KEY_LEFT)
-        } else if (e.keyCode === 38) {
+        } else if (e.keyCode === 104) {
             e.preventDefault()
             this.props.actions.startTurn(grammar.ON_KEY_UP)
-        } else if (e.keyCode === 39) {
+        } else if (e.keyCode === 102) {
             e.preventDefault()
             this.props.actions.startTurn(grammar.ON_KEY_RIGHT)
-        } else if (e.keyCode === 40) {
+        } else if (e.keyCode === 98) {
             e.preventDefault()
             this.props.actions.startTurn(grammar.ON_KEY_DOWN)
+        } else if (e.keyCode === 105) {
+            e.preventDefault()
+            this.props.actions.startTurn(grammar.ON_KEY_UP_RIGHT)
+        } else if (e.keyCode === 99) {
+            e.preventDefault()
+            this.props.actions.startTurn(grammar.ON_KEY_DOWN_RIGHT)
+        } else if (e.keyCode === 97) {
+            e.preventDefault()
+            this.props.actions.startTurn(grammar.ON_KEY_DOWN_LEFT)
+        } else if (e.keyCode === 103) {
+            e.preventDefault()
+            this.props.actions.startTurn(grammar.ON_KEY_UP_LEFT)
         }
     }
 

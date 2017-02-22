@@ -12,6 +12,10 @@ export const ON_KEY_LEFT = 'onLeftArrow'
 export const ON_KEY_RIGHT = 'onRightArrow'
 export const ON_KEY_UP = 'onUpArrow'
 export const ON_KEY_DOWN = 'onDownArrow'
+export const ON_KEY_UP_RIGHT = 'onUpRightArrow'
+export const ON_KEY_DOWN_RIGHT = 'onDownRightArrow'
+export const ON_KEY_DOWN_LEFT = 'onDownLeftArrow'
+export const ON_KEY_UP_LEFT = 'onUpLeftArrow'
 export const ON_MAIN_CHARACTER_MOVE = 'onMainCharacterMove'
 
 // keywords
