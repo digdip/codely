@@ -27,10 +27,6 @@ function createInitialModel() {
 const initialState = Immutable.fromJS(createInitialModel())
 
 
-function getEntityRoleById(entityId, state) {
-    return entityId === state.getIn([grammar.MAIN_CHARACTER_PROTOTYPE, grammar.ID]) ? grammar.MAIN_CHARACTER_PROTOTYPE : grammar.ENEMY_PROTOTYPE
-}
-
 export default function gameReducer(state = initialState, action = undefined) {
 
     switch (action.type) {
@@ -67,13 +63,16 @@ export default function gameReducer(state = initialState, action = undefined) {
             state = state.setIn([grammar.GAME_BOARD, grammar.WIDTH], action.width)
             return state.setIn([grammar.GAME_BOARD, grammar.HEIGHT], action.height)
         case types.START_TURN:
-            state = state.set(grammar.MAIN_CHARACTER, reducerUtils.runMethod(state.get(grammar.MAIN_CHARACTER), action.methodName))
-            return state.set(grammar.TURN_STATUS, grammar.TurnStatuses.MAIN_CHAR_RUNNING)
+            return startTurn(state, action.methodName)
         case types.CONTINUE_TURN:
             return continueTurn(state)
         default:
             return state
     }
+}
+
+function getEntityRoleById(entityId, state) {
+    return entityId === state.getIn([grammar.MAIN_CHARACTER_PROTOTYPE, grammar.ID]) ? grammar.MAIN_CHARACTER_PROTOTYPE : grammar.ENEMY_PROTOTYPE
 }
 
 function startEnemiesTurn(state) {
@@ -117,20 +116,25 @@ function continueEnemiesTurn(state) {
     return state
 }
 
+function startTurn(state, methodName) {
+    state = state.set(grammar.MAIN_CHARACTER, reducerUtils.runMethod(state.get(grammar.MAIN_CHARACTER), methodName))
+    state = state.set(grammar.TURN_STATUS, grammar.TurnStatuses.MAIN_CHAR_RUNNING)
+    return checkCollisions(state)
+}
+
 function continueTurn(state) {
     switch (state.get(grammar.TURN_STATUS)) {
         case grammar.TurnStatuses.MAIN_CHAR_RUNNING:
             //continue main turn
-            return continueMainCharTurn(state)
+            state = continueMainCharTurn(state)
         case grammar.TurnStatuses.MAIN_CHAR_DONE:
             //start enemies turns
-            return startEnemiesTurn(state)
+            state = startEnemiesTurn(state)
         case grammar.TurnStatuses.ENEMIES_RUNNING:
             //continue enemies turns
-            return continueEnemiesTurn(state)
-        default:
-            return state
+            state = continueEnemiesTurn(state)
     }
+    return checkCollisions(state)
 }
 
 function addMainCharacterMethods(json) {
@@ -200,4 +204,54 @@ function generateGameWorld(state, numberOfEnemies) {
         enemies = enemies.set(enemyInstance.get(grammar.ID), enemyInstance)
     }
     return state.set(grammar.ENEMIES, enemies)
+}
+
+function getEntityRect(entity) {
+    return {
+        x1: entity.getIn([grammar.PROPERTIES, grammar.X]),
+        x2: entity.getIn([grammar.PROPERTIES, grammar.X]) + entity.getIn([grammar.PROPERTIES, grammar.WIDTH]),
+        y1: entity.getIn([grammar.PROPERTIES, grammar.Y]),
+        y2: entity.getIn([grammar.PROPERTIES, grammar.Y]) + entity.getIn([grammar.PROPERTIES, grammar.HEIGHT])
+    }
+}
+function areColliding(entity1, entity2) {
+    var rect1 = getEntityRect(entity1)
+    var rect2 = getEntityRect(entity2)
+
+    if (rect1.x1 <= rect2.x2 && rect1.x2 >= rect2.x1 &&
+        rect1.y1 <= rect2.y2 && rect1.y2 >= rect2.y1){
+        return true
+    }
+    return false
+}
+
+function addCollisionToEntity(entity, collidingEntityId) {
+    let entityCollisions = entity.getIn([grammar.RUN_DATA, grammar.COLLISIONS])
+    if (!entityCollisions) {
+        entityCollisions = Immutable.Set([])
+        entity = entity.setIn([grammar.RUN_DATA, grammar.COLLISIONS], entityCollisions)
+    }
+    return entity.setIn([grammar.RUN_DATA, grammar.COLLISIONS], entityCollisions.add(collidingEntityId))
+}
+
+function checkCollisions(state) {
+    //go over all enemies
+    state.get(grammar.ENEMIES).map((enemy, enemyId) => {
+        //check collision with main char
+        if (areColliding(enemy, state.get(grammar.MAIN_CHARACTER))){
+            //store the collision on the entities
+            state = state.set(grammar.MAIN_CHARACTER, addCollisionToEntity( state.getIn([grammar.MAIN_CHARACTER]), enemyId))
+            state = state.setIn([grammar.ENEMIES, enemyId], addCollisionToEntity(enemy, state.getIn([grammar.MAIN_CHARACTER, grammar.ID])))
+        }
+        //check collision with all other enemies
+        state.get(grammar.ENEMIES).map((enemy2, enemy2Id) => {
+            //ignore myself
+            if (enemyId !== enemy2Id && areColliding(enemy, enemy2)) {
+                //store the collision on the entities
+                state = state.setIn([grammar.ENEMIES, enemyId], addCollisionToEntity(enemy, enemy2Id))
+                state = state.setIn([grammar.ENEMIES, enemy2Id], addCollisionToEntity(enemy2, enemyId))
+            }
+        })
+    })
+    return state
 }
