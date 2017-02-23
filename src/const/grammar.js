@@ -5,6 +5,7 @@ export const Y = 'Top'
 export const WIDTH = 'Width'
 export const HEIGHT = 'Height'
 export const COLOR = 'Color'
+export const IS_VISIBLE = 'isVisible'
 
 // pre-defined names
 export const MAIN_METHOD = 'main'
@@ -17,6 +18,7 @@ export const ON_KEY_DOWN_RIGHT = 'onDownRightArrow'
 export const ON_KEY_DOWN_LEFT = 'onDownLeftArrow'
 export const ON_KEY_UP_LEFT = 'onUpLeftArrow'
 export const ON_MAIN_CHARACTER_MOVE = 'onMainCharacterMove'
+export const ON_COLLISION = 'onCollision'
 
 // keywords
 export const ID = 'id'
@@ -38,6 +40,7 @@ export const METHOD_NAME = 'methodName'
 export const ENV_VARS = 'envVars'
 export const SELECTED_METHOD = 'selectedMethod'
 export const RUN_STATUS = 'runStatus'
+export const COLLISIONS = 'collisions'
 export const METHOD_SCRIPT = 'methodScript'
 export const IS_METHOD_PRE_DEFINED = 'isMethodPreDefined'
 export const METHOD_PARAMS = 'methodsParams'

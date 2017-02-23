@@ -17,10 +17,12 @@ class VisualEntity extends Component {
 
     render () {
         let properties = this.props.data.get(grammar.PROPERTIES).toJS()
+        let isVisible = properties[grammar.IS_VISIBLE]
         let opacity = this.props.isGhost ? '0.3' : '1'
         let height = properties[grammar.HEIGHT] * appConstants.GRID_SIZE_PIXELS + (this.props.isSelected ? 2 : 0)
         let width = properties[grammar.WIDTH] * appConstants.GRID_SIZE_PIXELS + (this.props.isSelected ? 2 : 0)
         return (
+        isVisible ?
             <svg className='animate' width={width} onClick={this.onClick}
                  height={height}
                  style={{position: "absolute", top: properties[grammar.Y] * appConstants.GRID_SIZE_PIXELS + 'px', left : properties[grammar.X] * appConstants.GRID_SIZE_PIXELS + 'px'}}>
@@ -29,6 +31,7 @@ class VisualEntity extends Component {
                           height={height}
                           style={{ fill: properties[grammar.COLOR], strokeWidth: this.props.isSelected ? 4 : 2, stroke: "rgb(0,0,0)", opacity : opacity}} />
             </svg>
+            : <div/>
         )
     }
 }
