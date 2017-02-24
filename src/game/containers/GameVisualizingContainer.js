@@ -74,11 +74,11 @@ class GameVisualizingContainer extends Component {
     }
 
     render() {
-        let theStyle = {backgroundColor: this.props.appMode === appConstants.AppMode.EDITING ? 'white' : '#d1d6d8'}
+        let theClass = this.props.appMode === appConstants.AppMode.EDITING ? 'visualContainerEditing' : 'visualContainerGame'
 
         return (
 
-            <div className='visualContainer' style={theStyle} ref='vizContainer'>
+            <div className={'visualContainer ' + theClass} ref='vizContainer'>
                 <div className='toolbar'>
                     <Button onClick={this.changeAppMode} icon='glyphicon-film'
                             text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Stop Game'}/>

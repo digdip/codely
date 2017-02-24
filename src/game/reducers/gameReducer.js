@@ -21,7 +21,7 @@ function createInitialModel() {
         }
     }
     model[appConstants.EntityRole.MAIN_CHARACTER] = createSquare(appConstants.EntityRole.MAIN_CHARACTER)
-    model[appConstants.EntityRole.ENEMY] = createSquare(appConstants.EntityRole.ENEMY, appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3, null, 'blue')
+    model[appConstants.EntityRole.ENEMY] = createSquare(appConstants.EntityRole.ENEMY, appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3, null, 'red')
     return model
 }
 const initialState = Immutable.fromJS(createInitialModel())

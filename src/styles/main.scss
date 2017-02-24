@@ -1,16 +1,31 @@
+@import "palette";
+
+body {
+  background-color: $yellow;
+}
+
 .mainContainer {
   height: 100%;
   width: 100%;
   position: fixed;
+  background-color: $yellow;
 }
 
 .visualContainer {
-  width : 100%;
+  width: 100%;
   height: 50%;
   border-bottom: 3px solid #bbbbbb;
-  display : inline-block;
+  display: inline-block;
   background-size: 10px 10px;
-  background-image: linear-gradient(to right, #eeeeee 1px, transparent 1px), linear-gradient(to bottom, #eeeeee 1px, transparent 1px);
+  background-image: linear-gradient(to right, $grey 1px, transparent 1px), linear-gradient(to bottom, $grey 1px, transparent 1px);
+}
+
+.visualContainerEditing{
+  background-color: lighten($green, 10%);
+}
+
+.visualContainerGame{
+  background-color: $green;
 }
 
 .codeContainer {
@@ -19,6 +34,7 @@
   width: 100%;
   height: 50%;
   padding: 10px;
+  background-color: $yellow;
 }
 
 .codeDefinitionContainer {
@@ -26,6 +42,7 @@
   margin-right: 10px;
   border: solid 1px #eeeeee;
   overflow: auto;
+  background-color: $yellow;
 }
 
 .codeTextEditorContainer {
@@ -38,46 +55,47 @@
   flex-direction: row;
   width: 100%;
   height: 40px;
-  background-color: #e7e7e7;
-  border-bottom: solid 1px #eeeeee;
+  background-color: $orange;
+  border-bottom: solid 1px $green;
   padding: 1px;
   padding-top: 5px;
-  button{
+  button {
     margin: 3px;
   }
 }
 
 .list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: $yellow;
 }
 
 .listItem {
-  border-bottom: 1px solid rgba(0,0,0,.12);
-  background-color: #ffffff;
+  border-bottom: 1px solid darken($yellow, 20%);
   height: 40px;
   width: 100%;
   padding: 10px;
+  background-color: $yellow;
 }
 
-
 .keyValueList {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: $yellow;
 }
 
 .keyValueListItem {
-  border-bottom: 1px solid rgba(0,0,0,.12);
-  background-color: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, .12);
+  background-color: $yellow;
   height: 40px;
   width: 100%;
   padding: 10px;
-  div{
+  div {
     display: inline-block;
   }
-  input{
+  input {
     width: 40px;
     display: inline-block;
     float: right;
@@ -86,15 +104,15 @@
 
 .listItem-selected {
   @extend .listItem;
-  background-color: #e0e0e0;
+  background-color: lighten($yellow, 10%);
 }
 
-.propertiesList{
-    width: 100%;
-    height: 100%;
+.propertiesList {
+  width: 100%;
+  height: 100%;
 }
 
-.animate{
+.animate {
   transition: all 500ms linear;
 }
 
@@ -104,16 +122,16 @@ button {
   font-size: 12px;
 }
 
-button:hover{
+button:hover {
   background-color: #bbbbbb;
 }
 
 .entryScreen {
-  div{
+  div {
     height: 10em;
     position: relative
   }
-  .link1{
+  .link1 {
     margin: 0;
     position: absolute;
     top: 40px;
@@ -121,7 +139,7 @@ button:hover{
     margin-right: -50%;
     transform: translate(-50%, -50%)
   }
-  .link2{
+  .link2 {
     margin: 0;
     position: absolute;
     top: 70px;
