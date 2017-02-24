@@ -258,7 +258,7 @@ function checkCollisions(state) {
     state.get(grammar.ENEMIES).map((enemy, enemyId) => {
         if (enemy.getIn([grammar.PROPERTIES, grammar.IS_VISIBLE]) === true) {
             //check collision with main char
-            if (areColliding(enemy, state.get(grammar.MAIN_CHARACTER))) {
+            if (state.getIn([grammar.MAIN_CHARACTER, grammar.PROPERTIES, grammar.IS_VISIBLE]) && areColliding(enemy, state.get(grammar.MAIN_CHARACTER))) {
                 //store the collision on the entities
                 state = state.set(grammar.MAIN_CHARACTER, addCollisionToEntity(state.getIn([grammar.MAIN_CHARACTER]), enemyId))
                 state = state.setIn([grammar.ENEMIES, enemyId], addCollisionToEntity(enemy, state.getIn([grammar.MAIN_CHARACTER, grammar.ID])))
