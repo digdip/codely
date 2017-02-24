@@ -4,12 +4,15 @@ import * as grammar from  '../../const/grammar'
 import * as reducerUtils from  '../../common/reducers/reducerUtils'
 import Immutable from 'immutable'
 import uuid from 'uuid'
+import demoData from './demoData.json'
 
 
 function createInitialModel() {
     let model = {
         mainCharacterPrototype: {},
+        mainCharacterDemoPrototype: {},
         enemyPrototype: {},
+        enemyDemoPrototype: {},
         selectedEntityRole: appConstants.EntityRole.MAIN_CHARACTER,
         appMode: appConstants.AppMode.EDITING,
         turnStatus: grammar.TurnStatuses.IDLE,
@@ -22,10 +25,19 @@ function createInitialModel() {
     }
     model[appConstants.EntityRole.MAIN_CHARACTER] = createSquare(appConstants.EntityRole.MAIN_CHARACTER)
     model[appConstants.EntityRole.ENEMY] = createSquare(appConstants.EntityRole.ENEMY, appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3, null, 'blue')
+    model[grammar.MAIN_CHAR_DEMO_PROTOTYPE] = createSquare(appConstants.EntityRole.MAIN_CHARACTER)
+    model[grammar.MAIN_CHAR_DEMO_PROTOTYPE][grammar.METHODS] = demoData.mainChar.methods
+    model[grammar.ENEMY_DEMO_PROTOTYPE] = createSquare(appConstants.EntityRole.ENEMY, appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3, null, 'blue')
+    model[grammar.ENEMY_DEMO_PROTOTYPE][grammar.METHODS] = demoData.enemy.methods
+
     return model
 }
-const initialState = Immutable.fromJS(createInitialModel())
 
+function addDemoData(model) {
+    let mainCharPrototype = addMainCharacterMethods({})
+}
+
+const initialState = Immutable.fromJS(createInitialModel())
 
 export default function gameReducer(state = initialState, action = undefined) {
 
@@ -66,6 +78,9 @@ export default function gameReducer(state = initialState, action = undefined) {
             return startTurn(state, action.methodName)
         case types.CONTINUE_TURN:
             return continueTurn(state)
+         case types.START_DEMO_GAME:
+             state = generateGameWorld(state, 10, true)
+             return state.set(grammar.APP_MODE, appConstants.AppMode.GAME)
         default:
             return state
     }
@@ -203,8 +218,13 @@ function createSquare(entityRole, xPos, yPos, color) {
     return json
 }
 
-function generateGameWorld(state, numberOfEnemies) {
-    let mainCharacterInstance = state.get(grammar.MAIN_CHARACTER_PROTOTYPE)
+function generateGameWorld(state, numberOfEnemies, isDemo) {
+    let mainCharacterInstance
+    if (isDemo) {
+        mainCharacterInstance = state.get(grammar.MAIN_CHAR_DEMO_PROTOTYPE)
+    } else {
+        mainCharacterInstance = state.get(grammar.MAIN_CHARACTER_PROTOTYPE)
+    }
     let xPos = Math.floor(state.getIn([grammar.GAME_BOARD, grammar.WIDTH]) / appConstants.GRID_SIZE_PIXELS) / 2
     let yPos = Math.floor(state.getIn([grammar.GAME_BOARD, grammar.HEIGHT]) / appConstants.GRID_SIZE_PIXELS) / 2
     mainCharacterInstance = mainCharacterInstance.setIn([grammar.PROPERTIES, grammar.X], xPos)
@@ -213,8 +233,13 @@ function generateGameWorld(state, numberOfEnemies) {
     state = state.set(grammar.MAIN_CHARACTER, mainCharacterInstance)
 
     let enemies = Immutable.fromJS({})
+    let enemyInstance
+    if (isDemo) {
+        enemyInstance = state.get(grammar.ENEMY_DEMO_PROTOTYPE)
+    } else {
+        enemyInstance = state.get(grammar.ENEMY_PROTOTYPE)
+    }
     for (let i = 0; i < numberOfEnemies; i++) {
-        let enemyInstance = state.get(grammar.ENEMY_PROTOTYPE)
         xPos = Math.floor(Math.random() * state.getIn([grammar.GAME_BOARD, grammar.WIDTH]) / appConstants.GRID_SIZE_PIXELS)
         yPos = Math.floor(Math.random() * state.getIn([grammar.GAME_BOARD, grammar.HEIGHT]) / appConstants.GRID_SIZE_PIXELS)
         enemyInstance = enemyInstance.setIn([grammar.PROPERTIES, grammar.X], xPos)

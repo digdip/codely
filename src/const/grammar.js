@@ -45,6 +45,8 @@ export const METHOD_SCRIPT = 'methodScript'
 export const IS_METHOD_PRE_DEFINED = 'isMethodPreDefined'
 export const METHOD_PARAMS = 'methodsParams'
 export const TURN_STATUS = 'turnStatus'
+export const MAIN_CHAR_DEMO_PROTOTYPE = 'mainCharacterDemoPrototype'
+export const ENEMY_DEMO_PROTOTYPE = 'enemyDemoPrototype'
 
 //run statuses
 export const RunStatuses = {

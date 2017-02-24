@@ -1,0 +1,58 @@
+{
+  "mainChar": {
+    "methods": {
+      "onDownLeftArrow": {
+        "methodScript": "onDownArrow()\nonLeftArrow()",
+        "isMethodPreDefined": true
+      },
+      "onLeftArrow": {
+        "methodScript": "Left -=2",
+        "isMethodPreDefined": true
+      },
+      "onUpRightArrow": {
+        "methodScript": "onUpArrow()\nonRightArrow()",
+        "isMethodPreDefined": true
+      },
+      "onUpLeftArrow": {
+        "methodScript": "onUpArrow()\nonLeftArrow()",
+        "isMethodPreDefined": true
+      },
+      "onDownArrow": {
+        "methodScript": "Top += 2",
+        "isMethodPreDefined": true
+      },
+      "onRightArrow": {
+        "methodScript": "Left +=2",
+        "isMethodPreDefined": true
+      },
+      "onDownRightArrow": {
+        "methodScript": "onDownArrow()\nonRightArrow()",
+        "isMethodPreDefined": true
+      },
+      "onUpArrow": {
+        "methodScript": "Top -= 2",
+        "isMethodPreDefined": true
+      },
+      "onCollision": {
+        "methodScript": "Color = 'grey'",
+        "isMethodPreDefined": true
+      }
+    }
+  },
+  "enemy": {
+    "methods": {
+      "onMainCharacterMove": {
+        "methodScript": "if Left < playerLeft then Left += 1 else Left -=1\nif Top < playerTop then Top += 1 else Top -= 1",
+        "isMethodPreDefined": true,
+        "methodsParams": [
+          "playerLeft",
+          "playerTop"
+        ]
+      },
+      "onCollision": {
+        "methodScript": "isVisible = false",
+        "isMethodPreDefined": true
+      }
+    }
+  }
+}
