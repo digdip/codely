@@ -15,6 +15,7 @@ class GameVisualizingContainer extends Component {
         this.addEntity = this.addEntity.bind(this)
         this.changeAppMode = this.changeAppMode.bind(this)
         this.updateBoardSize = this.updateBoardSize.bind(this)
+        this.startDemoGame = this.startDemoGame.bind(this)
     }
 
     addEntity() {
@@ -39,6 +40,10 @@ class GameVisualizingContainer extends Component {
 
     changeAppMode() {
         this.props.appMode === appConstants.AppMode.EDITING ? this.props.actions.enterGameMode() : this.props.actions.enterEditingMode()
+    }
+
+    startDemoGame() {
+        this.props.appMode === appConstants.AppMode.EDITING ? this.props.actions.startDemoGame() : this.props.actions.enterEditingMode()
     }
 
     onKeyDown(e) {
@@ -81,7 +86,9 @@ class GameVisualizingContainer extends Component {
             <div className={'visualContainer ' + theClass} ref='vizContainer'>
                 <div className='toolbar'>
                     <Button onClick={this.changeAppMode} icon='glyphicon-film'
-                            text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Stop Game'}/>
+                            text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Game' : 'Back To Edit'}/>
+                    <Button onClick={this.startDemoGame} icon='glyphicon-film'
+                            text={ this.props.appMode === appConstants.AppMode.EDITING ? 'Start Demo' : 'Back To Edit'}/>
                     <Button onClick={function() {localStorage.clear()}} text='Reset Local Storage'/>
                 </div>
                 <div>

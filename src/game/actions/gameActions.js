@@ -109,3 +109,9 @@ export function enterEditingMode() {
         type: types.ENTER_EDITING_MODE
     }
 }
+
+export function startDemoGame() {
+    return {
+        type: types.START_DEMO_GAME
+    }
+}
