@@ -24,10 +24,10 @@ function createInitialModel() {
         }
     }
     model[appConstants.EntityRole.MAIN_CHARACTER] = createSquare(appConstants.EntityRole.MAIN_CHARACTER)
-    model[appConstants.EntityRole.ENEMY] = createSquare(appConstants.EntityRole.ENEMY, appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3, null, 'blue')
+    model[appConstants.EntityRole.ENEMY] = createSquare(appConstants.EntityRole.ENEMY, appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3, null, 'red')
     model[grammar.MAIN_CHAR_DEMO_PROTOTYPE] = createSquare(appConstants.EntityRole.MAIN_CHARACTER)
     model[grammar.MAIN_CHAR_DEMO_PROTOTYPE][grammar.METHODS] = demoData.mainChar.methods
-    model[grammar.ENEMY_DEMO_PROTOTYPE] = createSquare(appConstants.EntityRole.ENEMY, appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3, null, 'blue')
+    model[grammar.ENEMY_DEMO_PROTOTYPE] = createSquare(appConstants.EntityRole.ENEMY, appConstants.DEFAULT_X_POSITION + appConstants.DEFAULT_WIDTH * 3, null, 'red')
     model[grammar.ENEMY_DEMO_PROTOTYPE][grammar.METHODS] = demoData.enemy.methods
 
     return model
